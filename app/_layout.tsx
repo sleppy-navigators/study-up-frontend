@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, { Suspense } from 'react';
 import { Providers } from '@/lib/react-query';
 import { ActivityIndicator, View } from 'react-native';
+import appConfig from '@/tamagui.config';
 import * as encoding from 'text-encoding';
 
 const LoadingScreen = () => (
@@ -13,16 +14,18 @@ const LoadingScreen = () => (
 
 export default function RootLayout() {
   return (
-    <Providers>
-      <Suspense fallback={<LoadingScreen />}>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="chat" />
-        </Stack>
-        <StatusBar style="light" />
-      </Suspense>
-    </Providers>
+    <TamaguiProvider config={appConfig}>
+      <Providers>
+        <Suspense fallback={<LoadingScreen />}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="chat" />
+          </Stack>
+          <StatusBar style="light" />
+        </Suspense>
+      </Providers>
+    </TamaguiProvider>
   );
 }
