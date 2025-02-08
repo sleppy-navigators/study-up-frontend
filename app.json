@@ -58,6 +58,13 @@
           "components": ["tamagui"],
           "config": "./tamagui.config.ts"
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "configureAndroidBackup": true,
+          "faceIDPermission": "Allow StudyUp to access your Face ID biometric data."
+        }
       ]
     ],
     "experiments": {
