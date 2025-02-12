@@ -5,6 +5,7 @@ import { Providers } from '@/lib/react-query';
 import { ActivityIndicator, View } from 'react-native';
 import appConfig from '@/tamagui.config';
 import * as encoding from 'text-encoding';
+import { TamaguiProvider } from 'tamagui';
 
 const LoadingScreen = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
