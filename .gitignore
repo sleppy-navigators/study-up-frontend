@@ -38,3 +38,14 @@ yarn-error.*
 app-example
 
 credentials.json
+
+.env
+
+# tamagui
+.tamagui/
+
+# android
+/android
+
+# ios
+/ios
