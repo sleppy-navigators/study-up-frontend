@@ -1,21 +1,25 @@
 import { createTamagui } from 'tamagui';
-import { createInterFont } from '@tamagui/font-inter';
-import { shorthands } from '@tamagui/shorthands';
-import { themes, tokens } from '@tamagui/themes';
+// import { createInterFont } from '@tamagui/font-inter';
+// import { shorthands } from '@tamagui/shorthands';
+// import { themes, tokens } from '@tamagui/themes';
 
-const appConfig = createTamagui({
-  fonts: {
-    body: createInterFont(),
-    heading: createInterFont({
-      face: {
-        700: { normal: 'InterBold' },
-      },
-    }),
-  },
-  tokens,
-  themes,
-  shorthands,
-});
+import { defaultConfig } from '@tamagui/config/v4';
+
+export const appConfig = createTamagui(defaultConfig);
+
+// const appConfig = createTamagui({
+//   fonts: {
+//     body: createInterFont(),
+//     heading: createInterFont({
+//       face: {
+//         700: { normal: 'InterBold' },
+//       },
+//     }),
+//   },
+//   tokens,
+//   themes,
+//   shorthands,
+// });
 
 export type AppConfig = typeof appConfig;
 
