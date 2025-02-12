@@ -51,13 +51,6 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ],
-      [
-        "@tamagui/babel-plugin",
-        {
-          "components": ["tamagui"],
-          "config": "./tamagui.config.ts"
-        }
       ]
     ],
     "experiments": {
