@@ -6,12 +6,8 @@ import { ActivityIndicator, View } from 'react-native';
 import { TamaguiProvider } from 'tamagui';
 import { ErrorBoundary } from 'react-error-boundary';
 import appConfig from '@/tamagui.config';
-import * as encoding from 'text-encoding';
-<<<<<<< HEAD
 import { ErrorFallback } from '@/components/ErrorFallback';
-=======
-import { TamaguiProvider } from 'tamagui';
->>>>>>> feat/set-up-tamagui
+import * as encoding from 'text-encoding';
 
 const LoadingScreen = () => (
   <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
