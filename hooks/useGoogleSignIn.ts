@@ -2,13 +2,24 @@ import { router } from 'expo-router';
 import { client } from '../lib/api/client';
 import { authActions } from '../lib/auth/store';
 import { signInWithGoogle } from '../lib/firebase';
+import { useMutation } from '@tanstack/react-query';
+import { useSetAtom } from 'jotai';
 
-export const useGoogleSignIn = () => {
-  const signIn = async () => {
-    try {
+interface SignInResponse {
+  apiResult: string;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
+}
+
+export const useGoogleSignInMutation = () => {
+  const setTokens = useSetAtom(authActions.setTokens);
+
+  return useMutation({
+    mutationFn: async () => {
       const idToken = await signInWithGoogle();
-
-      const response = await client
+      return client
         .post('auth/sign-in', {
           searchParams: {
             provider: 'GOOGLE',
@@ -17,25 +28,14 @@ export const useGoogleSignIn = () => {
             idToken,
           },
         })
-        .json<{
-          apiResult: string;
-          data: {
-            accessToken: string;
-            refreshToken: string;
-          };
-        }>();
-
-      if (response.apiResult === 'QUERY_OK') {
-        await authActions.setTokens(response.data);
-        router.replace('/chat');
+        .json<SignInResponse>();
+    },
+    throwOnError: true,
+    onSuccess: async ({ apiResult, data }) => {
+      if (apiResult === 'QUERY_OK') {
+        await setTokens(data);
+        router.replace('/');
       }
-    } catch (error) {
-      console.error('Sign in error:', error);
-      throw error;
-    }
-  };
-
-  return {
-    signIn,
-  };
+    },
+  });
 };
