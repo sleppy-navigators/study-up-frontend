@@ -53,13 +53,6 @@
         }
       ],
       [
-        "@tamagui/babel-plugin",
-        {
-          "components": ["tamagui"],
-          "config": "./tamagui.config.ts"
-        }
-      ],
-      [
         "expo-secure-store",
         {
           "configureAndroidBackup": true,
