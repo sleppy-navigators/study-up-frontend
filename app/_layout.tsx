@@ -4,9 +4,8 @@ import React, { Suspense } from 'react';
 import { Providers } from '@/lib/react-query';
 import { ActivityIndicator, View } from 'react-native';
 import { TamaguiProvider } from 'tamagui';
-import { ErrorBoundary } from 'react-error-boundary';
 import appConfig from '@/tamagui.config';
-import { ErrorFallback } from '@/components/ErrorFallback';
+import { ErrorBoundaryProvider } from '@/components/ErrorBoundaryProvider';
 import * as encoding from 'text-encoding';
 
 const LoadingScreen = () => (
@@ -19,7 +18,7 @@ export default function RootLayout() {
   return (
     <TamaguiProvider config={appConfig}>
       <Providers>
-        <ErrorBoundary FallbackComponent={ErrorFallback}>
+        <ErrorBoundaryProvider>
           <Suspense fallback={<LoadingScreen />}>
             <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -29,7 +28,7 @@ export default function RootLayout() {
             </Stack>
             <StatusBar style="light" />
           </Suspense>
-        </ErrorBoundary>
+        </ErrorBoundaryProvider>
       </Providers>
     </TamaguiProvider>
   );

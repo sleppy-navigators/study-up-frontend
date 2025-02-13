@@ -8,11 +8,12 @@ import {
   ServiceUnavailableError,
   TimeoutError,
   ValidationError,
+  ResetOptions,
 } from '../lib/errors/http';
 
 interface ErrorFallbackProps {
-  error: Error;
-  resetError?: () => void;
+  error: Error & { resetOptions?: ResetOptions };
+  resetError?: (resetOptions?: ResetOptions) => void;
 }
 
 export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
