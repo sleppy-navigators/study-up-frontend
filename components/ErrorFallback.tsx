@@ -1,4 +1,4 @@
-import { YStack, Text, Button } from 'tamagui';
+import { YStack, Text, Button, XStack } from 'tamagui';
 import { match, P } from 'ts-pattern';
 import { router } from 'expo-router';
 import {
@@ -77,17 +77,14 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
     }));
 
   return (
-    <YStack
-      flex={1}
-      alignItems="center"
-      justifyContent="center"
-      padding="$4"
-      space="$4">
-      <Text fontSize="$8">{errorInfo.icon}</Text>
-      <Text fontSize="$6" fontWeight="bold" textAlign="center">
-        {errorInfo.title}
-      </Text>
-      <Text fontSize="$4" textAlign="center" color="$gray11">
+    <YStack flex={1} gap="$4">
+      <XStack justifyContent="center" alignItems="center">
+        <Text fontSize="$8">{errorInfo.icon}</Text>
+        <Text fontSize="$6" fontWeight="bold">
+          {errorInfo.title}
+        </Text>
+      </XStack>
+      <Text fontSize="$4" opacity={0.7}>
         {errorInfo.message}
       </Text>
       <Button
