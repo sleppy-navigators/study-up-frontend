@@ -22,20 +22,20 @@ export const useHandleReset = () => {
     if (details.reason !== 'imperative-api') return;
 
     const {
-      clearCache = true,
-      clearAuth = false,
-      clearNavigation = true,
+      shouldClearCache = true,
+      shouldClearAuth = false,
+      shouldClearNavigation = true,
     } = details.args[0] || {};
 
-    if (clearCache) {
+    if (shouldClearCache) {
       queryClient.clear();
     }
 
-    if (clearAuth) {
+    if (shouldClearAuth) {
       await clearTokens();
     }
 
-    if (clearNavigation) {
+    if (shouldClearNavigation) {
       router.replace('/');
     }
   };
