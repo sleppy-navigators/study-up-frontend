@@ -27,7 +27,7 @@ export const useRecoverFromError = () => {
       }
 
       if (shouldClearNavigation) {
-        router.replace(navigationTarget as '/login' | '/');
+        router.replace(navigationTarget);
       }
     },
     [queryClient, clearTokens]
