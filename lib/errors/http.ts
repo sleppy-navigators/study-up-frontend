@@ -101,7 +101,7 @@ export class BadRequestError extends HTTPError {
     this.resetOptions = {
       shouldClearCache: false,
       shouldClearAuth: false,
-      shouldClearNavigation: false,
+      shouldClearNavigation: true,
     };
   }
 }
