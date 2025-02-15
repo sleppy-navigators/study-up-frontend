@@ -10,18 +10,13 @@ export const useRecoverFromError = () => {
   const clearTokens = useSetAtom(authActions.clearTokens);
 
   const recoverFromError = useCallback(
-    async (details: {
-      reason: 'imperative-api';
-      args: [ResetOptions] | [];
-    }) => {
-      if (details.reason !== 'imperative-api') return;
-
+    async (resetOptions: ResetOptions) => {
       const {
         shouldClearCache = true,
         shouldClearAuth = false,
         shouldClearNavigation = true,
         navigationTarget = '/',
-      } = details.args[0] || {};
+      } = resetOptions;
 
       if (shouldClearCache) {
         queryClient.clear();
@@ -32,7 +27,7 @@ export const useRecoverFromError = () => {
       }
 
       if (shouldClearNavigation) {
-        router.replace(navigationTarget);
+        router.replace(navigationTarget as '/login' | '/');
       }
     },
     [queryClient, clearTokens]
