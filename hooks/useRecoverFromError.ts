@@ -31,7 +31,7 @@ export const useRecoverFromError = () => {
       }
 
       if (shouldClearNavigation) {
-        router.replace('/login');
+        router.replace('/');
       }
     },
     [queryClient, clearTokens]
