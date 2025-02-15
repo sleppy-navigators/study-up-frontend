@@ -9,6 +9,7 @@ export interface ResetOptions {
   shouldClearCache?: boolean;
   shouldClearAuth?: boolean;
   shouldClearNavigation?: boolean;
+  navigationTarget?: string;
 }
 
 export class UnauthorizedError extends HTTPError {

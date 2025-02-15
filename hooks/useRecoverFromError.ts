@@ -20,6 +20,7 @@ export const useRecoverFromError = () => {
         shouldClearCache = true,
         shouldClearAuth = false,
         shouldClearNavigation = true,
+        navigationTarget = '/',
       } = details.args[0] || {};
 
       if (shouldClearCache) {
@@ -31,7 +32,7 @@ export const useRecoverFromError = () => {
       }
 
       if (shouldClearNavigation) {
-        router.replace('/');
+        router.replace(navigationTarget);
       }
     },
     [queryClient, clearTokens]
