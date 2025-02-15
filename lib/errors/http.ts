@@ -27,6 +27,7 @@ export class UnauthorizedError extends HTTPError {
       shouldClearCache: true,
       shouldClearAuth: true,
       shouldClearNavigation: true,
+      navigationTarget: '/login',
     };
   }
 }
@@ -46,6 +47,7 @@ export class ForbiddenError extends HTTPError {
       shouldClearCache: true,
       shouldClearAuth: true,
       shouldClearNavigation: true,
+      navigationTarget: '/',
     };
   }
 }
@@ -103,6 +105,7 @@ export class BadRequestError extends HTTPError {
       shouldClearCache: false,
       shouldClearAuth: false,
       shouldClearNavigation: true,
+      navigationTarget: '/',
     };
   }
 }
