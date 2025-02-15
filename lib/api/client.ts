@@ -126,7 +126,7 @@ const handleError = async (error: HTTPError): Promise<HTTPError> => {
 };
 
 export const client = ky.create({
-  prefixUrl: 'http://localhost:8080',
+  prefixUrl: process.env.EXPO_PUBLIC_API_URL,
   hooks: {
     beforeRequest: [
       async (request) => {
