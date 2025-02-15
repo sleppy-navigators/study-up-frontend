@@ -12,10 +12,7 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 
   const handleReset = useCallback(
     async (resetOptions: ResetOptions) => {
-      await recoverFromError({
-        reason: 'imperative-api',
-        args: [resetOptions],
-      });
+      await recoverFromError(resetOptions);
       retry();
     },
     [recoverFromError, retry]

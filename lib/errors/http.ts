@@ -4,12 +4,13 @@ import {
   type KyResponse,
   type KyRequest,
 } from 'ky';
+import type { Route } from 'expo-router/build/types';
 
 export interface ResetOptions {
   shouldClearCache?: boolean;
   shouldClearAuth?: boolean;
   shouldClearNavigation?: boolean;
-  navigationTarget?: string;
+  navigationTarget?: Route;
 }
 
 export class UnauthorizedError extends HTTPError {
