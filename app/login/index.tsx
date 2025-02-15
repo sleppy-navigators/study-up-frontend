@@ -1,17 +1,41 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useGoogleSignInMutation } from '../../hooks/useGoogleSignIn';
-import { Button, YStack } from 'tamagui';
+import { Button, Spinner, Text, YStack } from 'tamagui';
+import { SuspenseProvider } from '@/components/SuspenseProvider';
+import { ErrorBoundaryProps } from 'expo-router';
+import { ErrorFallback } from '@/components/ErrorFallback';
+import { useRecoverFromError } from '@/hooks/useRecoverFromError';
+import { ResetOptions } from '@/lib/errors/http';
 
-const GoogleSignInComponent = () => {
+export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
+  const { recoverFromError } = useRecoverFromError();
+
+  const handleReset = useCallback(
+    async (resetOptions: ResetOptions) => {
+      await recoverFromError({
+        reason: 'imperative-api',
+        args: [resetOptions],
+      });
+      retry();
+    },
+    [recoverFromError, retry]
+  );
+
+  return <ErrorFallback error={error} onReset={handleReset} />;
+}
+
+function Index() {
   const { mutate, isPending } = useGoogleSignInMutation();
 
   return (
-    <YStack p="$4" gap="$4">
-      <Button onPress={() => mutate()} themeInverse disabled={isPending}>
-        {isPending ? 'Signing in...' : 'Sign in with Google'}
-      </Button>
-    </YStack>
+    <SuspenseProvider>
+      <YStack>
+        <Button onPress={() => mutate()} themeInverse disabled={isPending}>
+          <Text>{isPending ? <Spinner /> : '구글로 로그인하기'}</Text>
+        </Button>
+      </YStack>
+    </SuspenseProvider>
   );
-};
+}
 
-export default GoogleSignInComponent;
+export default Index;

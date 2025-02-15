@@ -1,6 +1,5 @@
 import { YStack, Text, Button, XStack } from 'tamagui';
 import { match, P } from 'ts-pattern';
-import { router } from 'expo-router';
 import {
   UnauthorizedError,
   NetworkError,
@@ -12,11 +11,19 @@ import {
 } from '../lib/errors/http';
 
 interface ErrorFallbackProps {
-  error: Error & { resetOptions?: ResetOptions };
-  resetError?: (resetOptions?: ResetOptions) => void;
+  error: Error;
+  onReset: (resetOptions: ResetOptions) => void;
 }
 
-export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
+export const ErrorFallback = ({ error, onReset }: ErrorFallbackProps) => {
+  const handlePress = () => {
+    const resetOptions = (error as { resetOptions?: ResetOptions })
+      .resetOptions || {
+      shouldClearCache: true,
+    };
+    onReset(resetOptions);
+  };
+
   const errorInfo = match(error)
     .with(P.instanceOf(UnauthorizedError), () => ({
       icon: '🔒',
@@ -24,7 +31,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
       message: error.message,
       action: {
         label: '로그인하러 가기',
-        onPress: () => router.replace('/login'),
+        onPress: handlePress,
       },
     }))
     .with(P.instanceOf(NetworkError), () => ({
@@ -33,7 +40,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
       message: error.message,
       action: {
         label: '다시 시도',
-        onPress: resetError,
+        onPress: handlePress,
       },
     }))
     .with(
@@ -45,7 +52,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
         message: error.message,
         action: {
           label: '새로고침',
-          onPress: resetError,
+          onPress: handlePress,
         },
       })
     )
@@ -55,7 +62,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
       message: error.message,
       action: {
         label: '다시 시도',
-        onPress: resetError,
+        onPress: handlePress,
       },
     }))
     .with(P.instanceOf(ValidationError), () => ({
@@ -64,7 +71,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
       message: error.message,
       action: {
         label: '확인',
-        onPress: resetError,
+        onPress: handlePress,
       },
     }))
     .otherwise(() => ({
@@ -73,7 +80,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
       message: error.message,
       action: {
         label: '다시 시도',
-        onPress: resetError,
+        onPress: handlePress,
       },
     }));
 
@@ -93,7 +100,7 @@ export const ErrorFallback = ({ error, resetError }: ErrorFallbackProps) => {
         paddingVertical="$3"
         paddingHorizontal="$4"
         borderRadius="$4"
-        onPress={errorInfo.action.onPress}>
+        onPress={handlePress}>
         <Text color="white" fontSize="$4" fontWeight="bold">
           {errorInfo.action.label}
         </Text>
