@@ -3,11 +3,11 @@ import { DevToolsBubble } from 'react-native-react-query-devtools';
 import { ReactNode } from 'react';
 import * as Clipboard from 'expo-clipboard';
 
-interface ProvidersProps {
+interface QueryProviderProps {
   children: ReactNode;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function QueryProvider({ children }: QueryProviderProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
