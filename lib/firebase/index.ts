@@ -31,9 +31,7 @@ const signInWithGoogleNative = async () => {
   const credential = auth.GoogleAuthProvider.credential(idToken);
 
   const userCredential = await auth().signInWithCredential(credential);
-  const firebaseIdToken = await userCredential.user.getIdToken(true);
-
-  return firebaseIdToken;
+  return userCredential.user.getIdToken(true);
 };
 
 // Web sign in implementation
@@ -44,14 +42,7 @@ const signInWithGoogleWeb = async () => {
   provider.addScope('profile');
 
   const userCredential = await signInWithPopup(auth, provider);
-  const firebaseIdToken = await userCredential.user.getIdToken(true);
-
-  // Display token in web environment
-  if (Platform.OS === 'web') {
-    console.log('Firebase ID Token:', firebaseIdToken);
-  }
-
-  return firebaseIdToken;
+  return userCredential.user.getIdToken(true);
 };
 
 export const signInWithGoogle = Platform.select({
