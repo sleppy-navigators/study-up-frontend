@@ -3,6 +3,12 @@ import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import auth from '@react-native-firebase/auth';
 import { webClientId } from './config';
 import { initializeFirebase } from './init';
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut as webSignOut,
+} from 'firebase/auth';
 
 // Initialize Firebase based on platform
 initializeFirebase();
@@ -30,16 +36,34 @@ const signInWithGoogleNative = async () => {
   return firebaseIdToken;
 };
 
-// Web sign in implementation will be added in the next commit
+// Web sign in implementation
+const signInWithGoogleWeb = async () => {
+  const auth = getAuth();
+  const provider = new GoogleAuthProvider();
+  provider.addScope('email');
+  provider.addScope('profile');
+
+  const userCredential = await signInWithPopup(auth, provider);
+  const firebaseIdToken = await userCredential.user.getIdToken(true);
+
+  // Display token in web environment
+  if (Platform.OS === 'web') {
+    console.log('Firebase ID Token:', firebaseIdToken);
+  }
+
+  return firebaseIdToken;
+};
 
 export const signInWithGoogle = Platform.select({
-  native: signInWithGoogleNative,
-  default: signInWithGoogleNative, // Temporary, will be replaced with web implementation
+  web: signInWithGoogleWeb,
+  default: signInWithGoogleNative,
 });
 
 export const signOutFromGoogle = async () => {
-  if (Platform.OS !== 'web') {
+  if (Platform.OS === 'web') {
+    const auth = getAuth();
+    await webSignOut(auth);
+  } else {
     await GoogleSignin.signOut();
   }
-  // Web sign out will be added in the next commit
 };
