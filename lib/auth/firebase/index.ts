@@ -10,9 +10,6 @@ import {
   signOut as webSignOut,
 } from 'firebase/auth';
 
-// Initialize Firebase based on platform
-initializeFirebase();
-
 // Configure Google Sign-In
 if (Platform.OS !== 'web') {
   GoogleSignin.configure({
@@ -20,6 +17,8 @@ if (Platform.OS !== 'web') {
     webClientId,
     offlineAccess: true,
   });
+} else {
+  initializeFirebase();
 }
 
 // Native sign in implementation
