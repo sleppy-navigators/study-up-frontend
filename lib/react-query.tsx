@@ -1,13 +1,16 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider as TanstackQueryClientProvider,
+} from '@tanstack/react-query';
 import { DevToolsBubble } from 'react-native-react-query-devtools';
 import { ReactNode } from 'react';
 import * as Clipboard from 'expo-clipboard';
 
-interface ProvidersProps {
+interface QueryClientProviderProps {
   children: ReactNode;
 }
 
-export function Providers({ children }: ProvidersProps) {
+export function QueryClientProvider({ children }: QueryClientProviderProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -30,11 +33,11 @@ export function Providers({ children }: ProvidersProps) {
   };
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <TanstackQueryClientProvider client={queryClient}>
       {children}
       {process.env.NODE_ENV === 'development' && (
         <DevToolsBubble onCopy={onCopy} />
       )}
-    </QueryClientProvider>
+    </TanstackQueryClientProvider>
   );
 }
