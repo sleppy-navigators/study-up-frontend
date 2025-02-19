@@ -1,14 +1,14 @@
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { Providers } from '@/lib/react-query';
+import { QueryProvider } from '@/lib/react-query';
 import { TamaguiProvider } from 'tamagui';
 import appConfig from '@/tamagui.config';
 
 export default function RootLayout() {
   return (
     <TamaguiProvider config={appConfig}>
-      <Providers>
+      <QueryProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
@@ -16,7 +16,7 @@ export default function RootLayout() {
           <Stack.Screen name="chat" />
         </Stack>
         <StatusBar style="light" />
-      </Providers>
+      </QueryProvider>
     </TamaguiProvider>
   );
 }
