@@ -1,7 +1,7 @@
 import { router } from 'expo-router';
 import { client } from '../lib/api/client';
 import { authActions } from '../lib/auth/store';
-import { signInWithGoogle } from '../lib/firebase';
+import { signInWithGoogle } from '@/lib/auth/firebase';
 import { useMutation } from '@tanstack/react-query';
 import { useSetAtom } from 'jotai';
 
@@ -19,6 +19,7 @@ export const useGoogleSignInMutation = () => {
   return useMutation({
     mutationFn: async () => {
       const idToken = await signInWithGoogle();
+
       return client
         .post('auth/sign-in', {
           searchParams: {
