@@ -32,11 +32,9 @@ export const useGoogleSignInMutation = () => {
         .json<SignInResponse>();
     },
     throwOnError: true,
-    onSuccess: async ({ apiResult, data }) => {
-      if (apiResult === 'QUERY_OK') {
-        await setTokens(data);
-        router.replace('/');
-      }
+    onSuccess: ({ data }) => {
+      // await setTokens(data);
+      // router.replace('/login');
     },
   });
 };

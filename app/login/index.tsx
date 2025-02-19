@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useGoogleSignInMutation } from '../../hooks/useGoogleSignIn';
 import { Button, Spinner, Text, YStack } from 'tamagui';
 import { SuspenseProvider } from '@/components/SuspenseProvider';
@@ -7,6 +7,7 @@ import { ErrorFallback } from '@/components/ErrorFallback';
 import { useRecoverFromError } from '@/hooks/useRecoverFromError';
 import { ResetOptions } from '@/lib/errors/http';
 import { Platform } from 'react-native';
+import { Text as BasicText } from 'react-native';
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   const { recoverFromError } = useRecoverFromError();
@@ -23,15 +24,20 @@ export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
 }
 
 function Index() {
-  const { mutate, isPending } = useGoogleSignInMutation();
-  const [token, setToken] = useState<string | null>(null);
+  const { mutateAsync, isPending } = useGoogleSignInMutation();
+  const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [refreshToken, setRefreshToken] = useState<string | null>(null);
 
   const handleSignIn = useCallback(async () => {
-    const result = await mutate();
-    if (Platform.OS === 'web' && result) {
-      setToken(result);
+    const { data } = await mutateAsync();
+
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = data;
+
+    if (Platform.OS === 'web' && newAccessToken && newRefreshToken) {
+      setAccessToken(newAccessToken);
+      setRefreshToken(newRefreshToken);
     }
-  }, [mutate]);
+  }, [mutateAsync]);
 
   return (
     <SuspenseProvider>
@@ -39,19 +45,23 @@ function Index() {
         <Button onPress={handleSignIn} themeInverse disabled={isPending}>
           <Text>{isPending ? <Spinner /> : '구글로 로그인하기'}</Text>
         </Button>
-        {Platform.OS === 'web' && token && (
-          <YStack
-            style={{
-              backgroundColor: 'var(--blue2)',
-              padding: 16,
-              borderRadius: 8,
-            }}>
+        <BasicText>{accessToken}</BasicText>
+        <BasicText>{refreshToken}</BasicText>
+        {Platform.OS === 'web' && accessToken && refreshToken && (
+          <YStack>
             <Text
               style={{
                 fontFamily: 'monospace',
                 color: 'var(--blue11)',
               }}>
-              Firebase ID Token: {token}
+              Access Token: {accessToken}
+            </Text>
+            <Text
+              style={{
+                fontFamily: 'monospace',
+                color: 'var(--blue11)',
+              }}>
+              Refresh Token: {refreshToken}
             </Text>
           </YStack>
         )}
