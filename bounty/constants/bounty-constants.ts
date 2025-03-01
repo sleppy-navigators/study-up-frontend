@@ -1,0 +1,7 @@
+export const BOUNTY_AMOUNTS = {
+  STANDARD: 5000,
+  PREMIUM: 10000,
+  SPECIAL: 15000,
+};
+
+export const MAX_BOUNTY_AMOUNT = 30000;
