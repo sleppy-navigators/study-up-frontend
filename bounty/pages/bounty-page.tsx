@@ -1,6 +1,5 @@
 import { ScrollView, YStack } from 'tamagui';
 import { useState } from 'react';
-import { BountyHeader } from '@/bounty/components/bounty-header';
 import { TaskSection } from '@/bounty/components/task-section';
 import type { TaskItemProps } from '@/bounty/components/task-item';
 import { ListSection } from '@/base/components/list-section';
@@ -71,8 +70,6 @@ export function BountyPage() {
   return (
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
-        <BountyHeader />
-
         <ListSection items={bountyItems} />
 
         <TaskSection title="현재 수행중인 태스크" items={tasks} />
