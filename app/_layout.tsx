@@ -11,7 +11,7 @@ import {
   ThemeProvider,
 } from '@react-navigation/native';
 import { Header } from '@/base/components/header';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -20,17 +20,19 @@ export default function RootLayout() {
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <SafeAreaProvider>
           <QueryProvider>
-            <Stack
-              screenOptions={{
-                header: (props) => <Header />,
-              }}>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen name="+not-found" />
-              <Stack.Screen name="login" />
-              <Stack.Screen name="chat" />
-              <Stack.Screen name="bounty" options={{ headerShown: true }} />
-              <Stack.Screen name="group" options={{ headerShown: true }} />
-            </Stack>
+            <SafeAreaView style={{ flex: 1 }}>
+              <Stack
+                screenOptions={{
+                  header: (props) => <Header />,
+                }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="+not-found" />
+                <Stack.Screen name="login" />
+                <Stack.Screen name="chat" />
+                <Stack.Screen name="bounty" options={{ headerShown: true }} />
+                <Stack.Screen name="group" options={{ headerShown: true }} />
+              </Stack>
+            </SafeAreaView>
             <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
           </QueryProvider>
         </SafeAreaProvider>
