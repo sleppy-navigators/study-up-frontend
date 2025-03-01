@@ -2,17 +2,13 @@ import { createTamagui } from 'tamagui';
 import { shorthands } from '@tamagui/shorthands';
 import { themes, tokens } from '@tamagui/themes';
 import { defaultConfig } from '@tamagui/config/v4';
-import { createInterFont } from '@tamagui/font-inter';
+import { createPretendardVariableFont } from '@/base/lib/create-pretendard-font';
 
 const customConfig = {
   fonts: {
     ...defaultConfig.fonts,
-    body: createInterFont(),
-    heading: createInterFont({
-      face: {
-        700: { normal: 'InterBold' },
-      },
-    }),
+    body: createPretendardVariableFont(),
+    heading: createPretendardVariableFont(),
   },
 
   tokens: {
