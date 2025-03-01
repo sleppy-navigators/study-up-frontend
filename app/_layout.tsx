@@ -4,19 +4,29 @@ import React from 'react';
 import { QueryProvider } from '@/lib/react-query';
 import { TamaguiProvider } from 'tamagui';
 import appConfig from '@/tamagui.config';
+import { useColorScheme } from 'react-native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 
 export default function RootLayout() {
+  const colorScheme = useColorScheme();
   return (
-    <TamaguiProvider config={appConfig}>
-      <QueryProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen name="login" />
-          <Stack.Screen name="chat" />
-        </Stack>
-        <StatusBar style="light" />
-      </QueryProvider>
+    <TamaguiProvider config={appConfig} defaultTheme={colorScheme!}>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <QueryProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="login" />
+            <Stack.Screen name="chat" />
+            <Stack.Screen name="bounty" options={{ headerShown: false }} />
+          </Stack>
+          <StatusBar style="light" />
+        </QueryProvider>
+      </ThemeProvider>
     </TamaguiProvider>
   );
 }

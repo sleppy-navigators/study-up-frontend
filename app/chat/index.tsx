@@ -5,11 +5,11 @@ import { Chat as ChatComponent } from '@/components/Chat';
 const ChatContent = () => {
   return (
     <View style={{ flex: 1 }}>
-      <ChatComponent
+      {/* <ChatComponent
         groupId={1}
         userId={1}
         url={process.env.EXPO_PUBLIC_WEBSOCKET_URL!}
-      />
+      /> */}
     </View>
   );
 };
