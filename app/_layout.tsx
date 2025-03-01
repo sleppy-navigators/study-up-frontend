@@ -31,7 +31,7 @@ export default function RootLayout() {
               <Stack.Screen name="bounty" options={{ headerShown: true }} />
               <Stack.Screen name="group" options={{ headerShown: true }} />
             </Stack>
-            <StatusBar style="light" />
+            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
           </QueryProvider>
         </SafeAreaProvider>
       </ThemeProvider>
