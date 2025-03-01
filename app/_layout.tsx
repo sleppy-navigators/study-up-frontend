@@ -10,6 +10,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
+import { Header } from '@/base/components/header';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -17,12 +18,16 @@ export default function RootLayout() {
     <TamaguiProvider config={appConfig} defaultTheme={colorScheme!}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
         <QueryProvider>
-          <Stack>
+          <Stack
+            screenOptions={{
+              header: (props) => <Header />,
+            }}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
             <Stack.Screen name="login" />
             <Stack.Screen name="chat" />
-            <Stack.Screen name="bounty" options={{ headerShown: false }} />
+            <Stack.Screen name="bounty" options={{ headerShown: true }} />
+            <Stack.Screen name="group" options={{ headerShown: true }} />
           </Stack>
           <StatusBar style="light" />
         </QueryProvider>
