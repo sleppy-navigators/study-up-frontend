@@ -1,11 +1,10 @@
 import { createTamagui } from 'tamagui';
-import { createInterFont } from '@tamagui/font-inter';
 import { shorthands } from '@tamagui/shorthands';
 import { themes, tokens } from '@tamagui/themes';
 import { defaultConfig } from '@tamagui/config/v4';
+import { createInterFont } from '@tamagui/font-inter';
 
 const customConfig = {
-  ...defaultConfig,
   fonts: {
     ...defaultConfig.fonts,
     body: createInterFont(),
@@ -15,18 +14,25 @@ const customConfig = {
       },
     }),
   },
+
   tokens: {
-    ...defaultConfig.tokens,
     ...tokens,
+    ...defaultConfig.tokens,
   },
   themes: {
-    ...defaultConfig.themes,
     ...themes,
+    ...defaultConfig.themes,
   },
   shorthands: {
-    ...defaultConfig.shorthands,
     ...shorthands,
+    ...defaultConfig.shorthands,
   },
+  settings: {
+    onlyAllowShorthands: false,
+    fastSchemeChange: true,
+    themeClassNameOnRoot: true,
+  },
+  defaultTheme: 'light',
 };
 
 export const appConfig = createTamagui(customConfig);
