@@ -1,6 +1,5 @@
 import { ScrollView, YStack } from 'tamagui';
 import { useState } from 'react';
-import { Header } from '@/base/components/header';
 import { BottomNavigation } from '@/base/components/bottom-navigation';
 import { GroupSection } from '@/group/components/group-section';
 import type { GroupItemProps } from '@/group/components/group-item';
@@ -36,12 +35,6 @@ export function GroupListPage() {
 
   return (
     <YStack flex={1} backgroundColor="$background">
-      <Header
-        title="그룹"
-        onBack={() => console.log('Back pressed')}
-        onAdd={() => console.log('Add pressed')}
-      />
-
       <ScrollView flex={1}>
         <GroupSection items={groupItems} />
       </ScrollView>

@@ -1,15 +1,57 @@
 import type React from 'react';
 import { ArrowLeft, Plus } from '@tamagui/lucide-icons';
-import { Button, H2, XStack, YStack } from 'tamagui';
+import { Button, H2, Paragraph, XStack, YStack } from 'tamagui';
+import { usePathname, useRouter } from 'expo-router';
 
 export interface HeaderProps {
-  title: string;
+  title?: string;
   onBack?: () => void;
   onAdd?: () => void;
   children?: React.ReactNode;
 }
 
-export function Header({ title, onBack, onAdd, children }: HeaderProps) {
+// 라우트별 헤더 설정
+const ROUTE_HEADERS: Record<
+  string,
+  Omit<HeaderProps, 'onBack' | 'onAdd'> & {
+    showBackButton?: boolean;
+    showAddButton?: boolean;
+  }
+> = {
+  '/bounty': {
+    title: '바운티',
+    showBackButton: true,
+    children: <Paragraph theme="alt2">최대 30천원 수령 가능</Paragraph>,
+  },
+  '/group': {
+    title: '그룹',
+    showBackButton: true,
+    showAddButton: true,
+  },
+};
+
+export function Header(props: HeaderProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // 라우트 기반 설정과 직접 전달된 props 병합
+  const routeConfig = ROUTE_HEADERS[pathname] || {};
+
+  const title = props.title || routeConfig.title || '';
+  const children = props.children || routeConfig.children;
+
+  // 뒤로가기 핸들러
+  const handleBack =
+    props.onBack ||
+    (routeConfig.showBackButton ? () => router.back() : undefined);
+
+  // 추가 버튼 핸들러
+  const handleAdd =
+    props.onAdd ||
+    (routeConfig.showAddButton
+      ? () => console.log(`Add pressed on ${pathname}`)
+      : undefined);
+
   return (
     <YStack backgroundColor="$background">
       <XStack
@@ -18,18 +60,22 @@ export function Header({ title, onBack, onAdd, children }: HeaderProps) {
         justifyContent="space-between"
         paddingHorizontal="$4">
         <XStack alignItems="center" gap="$2">
-          {onBack && (
+          {handleBack && (
             <Button
               chromeless
-              onPress={onBack}
+              onPress={handleBack}
               icon={<ArrowLeft size="$1.5" />}
             />
           )}
           <H2>{title}</H2>
         </XStack>
 
-        {onAdd && (
-          <Button size="$3" circular backgroundColor="$yellow9" onPress={onAdd}>
+        {handleAdd && (
+          <Button
+            size="$3"
+            circular
+            backgroundColor="$yellow9"
+            onPress={handleAdd}>
             <Plus size="$1.5" color="$color" />
           </Button>
         )}
