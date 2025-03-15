@@ -1,16 +1,24 @@
 import { useQuery } from '@tanstack/react-query';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { client } from '../../lib/api/client';
 import { SuccessResponse } from '../../base/api/types';
 import { GroupListResponse, UserTaskListResponse } from './types';
 
-/**
- * User Query Key Factory
- */
-export const userKeys = {
-  all: ['user'] as const,
-  tasks: () => [...userKeys.all, 'tasks'] as const,
-  groups: () => [...userKeys.all, 'groups'] as const,
-};
+export const userKeys = createQueryKeys('user', {
+  me: {
+    queryKey: null,
+    contextQueries: {
+      tasks: {
+        queryKey: null,
+        queryFn: () => userApi.getUserTasks(),
+      },
+      groups: {
+        queryKey: null,
+        queryFn: () => userApi.getUserGroups(),
+      },
+    },
+  },
+});
 
 /**
  * User API 함수
@@ -41,18 +49,12 @@ export const userApi = {
  * 유저 태스크 목록 조회 훅
  */
 export function useUserTasksQuery() {
-  return useQuery({
-    queryKey: userKeys.tasks(),
-    queryFn: () => userApi.getUserTasks(),
-  });
+  return useQuery(userKeys.me._ctx.tasks);
 }
 
 /**
  * 유저 그룹 목록 조회 훅
  */
 export function useUserGroupsQuery() {
-  return useQuery({
-    queryKey: userKeys.groups(),
-    queryFn: () => userApi.getUserGroups(),
-  });
+  return useQuery(userKeys.me._ctx.groups);
 }
