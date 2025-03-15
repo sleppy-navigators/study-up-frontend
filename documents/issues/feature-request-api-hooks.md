@@ -1,8 +1,8 @@
 ## 필요 기능
 
-- [ ] HTTP 클라이언트(ky)를 활용한 API 함수 제작
+- [x] HTTP 클라이언트(ky)를 활용한 API 함수 제작
   - 각 도메인별로 API 함수 구현 (auth, user, group, challenge, media)
-- [ ] React Query를 활용한 query 및 mutation hook 구현
+- [x] React Query를 활용한 query 및 mutation hook 구현
   - Query hook: `use{ResourceName}Query` 네이밍 컨벤션 사용
   - Mutation hook: `use{ActionName}{ResourceName}` 네이밍 컨벤션 사용
 
@@ -12,11 +12,11 @@
 
 - [ ] 도메인별 디렉토리 구조 생성
 
-  - `lib/api/auth/index.ts`
-  - `lib/api/user/index.ts`
-  - `lib/api/group/index.ts`
-  - `lib/api/challenge/index.ts`
-  - `lib/api/media/index.ts`
+  - `auth/api/index.ts`
+  - `user/api/index.ts`
+  - `group/api/index.ts`
+  - `challenge/api/index.ts`
+  - `media/api/index.ts`
 
 - [ ] Auth API 함수 구현
 
@@ -89,11 +89,11 @@
 
 ## 구현 예시
 
-### API 함수 예시 (auth/index.ts)
+### API 함수 예시 (auth/api/index.ts)
 
 ```typescript
-import { client } from '../client';
-import { TokenResponse } from './types';
+import { client } from '../../lib/api/client';
+import { TokenResponse } from '../../lib/api/types';
 
 export const authApi = {
   signIn: (provider: string, idToken: string) =>
@@ -115,7 +115,7 @@ export const authApi = {
 };
 ```
 
-### Query Hook 예시 (user/hooks.ts)
+### Query Hook 예시 (user/api/hooks.ts)
 
 ```typescript
 import { useQuery } from '@tanstack/react-query';
@@ -136,12 +136,12 @@ export function useUserGroupsQuery() {
 }
 ```
 
-### Mutation Hook 예시 (group/hooks.ts)
+### Mutation Hook 예시 (group/api/hooks.ts)
 
 ```typescript
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { groupApi } from './index';
-import type { GroupCreationRequest } from './types';
+import type { GroupCreationRequest } from '../../lib/api/types';
 
 export function useCreateGroup() {
   const queryClient = useQueryClient();
