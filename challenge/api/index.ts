@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { client } from '../../lib/api/client';
 import { SuccessResponse } from '../../base/api/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   ChallengeCreationRequest,
   ChallengeResponse,
@@ -8,19 +9,19 @@ import {
   TaskListResponse,
   TaskResponse,
 } from './types';
+import { userKeys } from '@/user/api';
+import { groupKeys } from '@/group/api';
 
 /**
  * Challenge Query Key Factory
  */
-export const challengeKeys = {
-  all: ['challenge'] as const,
-  lists: () => [...challengeKeys.all, 'list'] as const,
-  list: (id: number) => [...challengeKeys.lists(), id] as const,
-  tasks: (challengeId: number) =>
-    [...challengeKeys.list(challengeId), 'tasks'] as const,
-  task: (challengeId: number, taskId: number) =>
-    [...challengeKeys.tasks(challengeId), taskId] as const,
-};
+export const challengeKeys = createQueryKeys('challenge', {
+  all: null,
+  tasks: (id: number) => ({
+    queryKey: [id],
+    queryFn: () => challengeApi.getChallengeTasks(id),
+  }),
+});
 
 /**
  * Challenge API 함수
@@ -85,9 +86,8 @@ export function useCreateChallenge() {
     mutationFn: ({ groupId, data }) =>
       challengeApi.createChallenge(groupId, data),
     onSuccess: (_, { groupId }) => {
-      // 그룹의 챌린지 목록을 갱신
       queryClient.invalidateQueries({
-        queryKey: ['group', 'list', groupId, 'challenges'],
+        queryKey: groupKeys.challenges(groupId),
       });
     },
   });
@@ -113,11 +113,11 @@ export function useCompleteTask() {
     onSuccess: (_, { challengeId }) => {
       // 챌린지의 태스크 목록을 갱신
       queryClient.invalidateQueries({
-        queryKey: challengeKeys.tasks(challengeId),
+        queryKey: challengeKeys.tasks(challengeId).queryKey,
       });
       // 유저의 태스크 목록을 갱신
       queryClient.invalidateQueries({
-        queryKey: ['user', 'tasks'],
+        queryKey: userKeys.me._ctx.tasks.queryKey,
       });
     },
   });
@@ -127,8 +127,5 @@ export function useCompleteTask() {
  * 챌린지 태스크 목록 조회 훅
  */
 export function useChallengeTasksQuery(challengeId: number) {
-  return useQuery({
-    queryKey: challengeKeys.tasks(challengeId),
-    queryFn: () => challengeApi.getChallengeTasks(challengeId),
-  });
+  return useQuery(challengeKeys.tasks(challengeId));
 }
