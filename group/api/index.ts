@@ -1,0 +1,244 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { client } from '../../lib/api/client';
+import { Pageable, SuccessResponse } from '../../base/api/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
+import {
+  ChatMessageListResponse,
+  GroupChallengeListResponse,
+  GroupCreationRequest,
+  GroupInvitationAcceptRequest,
+  GroupInvitationResponse,
+  GroupResponse,
+  GroupTaskListResponse,
+} from './types';
+import { userKeys } from '@/user/api';
+
+/**
+ * Group Query Key Factory with @lukemorales/query-key-factory
+ */
+export const groupKeys = createQueryKeys('group', {
+  all: null,
+  challenges: (id: number) => ({
+    queryKey: [id],
+    queryFn: () => groupApi.getGroupChallenges(id),
+    contextQueries: {
+      tasks: {
+        queryKey: null,
+        queryFn: () => groupApi.getGroupTasks(id),
+      },
+    },
+  }),
+  invitation: (id: number, invitationId: number) => ({
+    queryKey: [id, invitationId],
+    queryFn: () => groupApi.getInvitation(id, invitationId),
+  }),
+  messages: (id: number, pageable: Pageable) => ({
+    queryKey: pageable ? [id, pageable] : [id],
+    queryFn: () => groupApi.getGroupMessages(id, pageable),
+  }),
+});
+
+/**
+ * Group API 함수
+ */
+export const groupApi = {
+  /**
+   * 그룹 생성
+   * @param data 그룹 생성 요청 데이터
+   * @returns 그룹 응답
+   */
+  createGroup: (data: GroupCreationRequest) =>
+    client
+      .post('groups', {
+        json: data,
+      })
+      .json<SuccessResponse<GroupResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 탈퇴
+   * @param groupId 그룹 ID
+   * @returns void
+   */
+  leaveGroup: (groupId: number) =>
+    client
+      .post(`groups/${groupId}/leave`)
+      .json<SuccessResponse<void>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 초대
+   * @param groupId 그룹 ID
+   * @returns 그룹 초대 응답
+   */
+  inviteUser: (groupId: number) =>
+    client
+      .post(`groups/${groupId}/invitations`)
+      .json<SuccessResponse<GroupInvitationResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 초대 수락
+   * @param groupId 그룹 ID
+   * @param invitationId 초대 ID
+   * @param data 초대 수락 요청 데이터
+   * @returns 그룹 응답
+   */
+  acceptInvitation: (
+    groupId: number,
+    invitationId: number,
+    data: GroupInvitationAcceptRequest
+  ) =>
+    client
+      .post(`groups/${groupId}/invitations/${invitationId}/accept`, {
+        json: data,
+      })
+      .json<SuccessResponse<GroupResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 챌린지 목록 조회
+   * @param groupId 그룹 ID
+   * @returns 그룹 챌린지 목록 응답
+   */
+  getGroupChallenges: (groupId: number) =>
+    client
+      .get(`groups/${groupId}/challenges`)
+      .json<SuccessResponse<GroupChallengeListResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 태스크 목록 조회
+   * @param groupId 그룹 ID
+   * @returns 그룹 태스크 목록 응답
+   */
+  getGroupTasks: (groupId: number) =>
+    client
+      .get(`groups/${groupId}/tasks`)
+      .json<SuccessResponse<GroupTaskListResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 메시지 목록 조회
+   * @param groupId 그룹 ID
+   * @param pageable 페이지네이션 파라미터
+   * @returns 채팅 메시지 목록 응답
+   */
+  getGroupMessages: (groupId: number, pageable: Pageable) => {
+    // 쿼리 파라미터를 URL에 직접 추가
+    const queryParams = `page=${pageable.page}&size=${pageable.size}${
+      pageable.sort ? `&sort=${pageable.sort.join(',')}` : ''
+    }`;
+
+    return client
+      .get(`groups/${groupId}/messages?${queryParams}`)
+      .json<SuccessResponse<ChatMessageListResponse>>()
+      .then((res) => res.data);
+  },
+
+  /**
+   * 그룹 초대 조회
+   * @param groupId 그룹 ID
+   * @param invitationId 초대 ID
+   * @returns 그룹 응답
+   */
+  getInvitation: (groupId: number, invitationId: number) =>
+    client
+      .get(`groups/${groupId}/invitations/${invitationId}`)
+      .json<SuccessResponse<GroupResponse>>()
+      .then((res) => res.data),
+};
+
+/**
+ * 그룹 생성 훅
+ */
+export function useCreateGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation<GroupResponse, Error, GroupCreationRequest>({
+    mutationFn: (data) => groupApi.createGroup(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
+    },
+  });
+}
+
+/**
+ * 그룹 탈퇴 훅
+ */
+export function useLeaveGroup() {
+  const queryClient = useQueryClient();
+
+  return useMutation<void, Error, number>({
+    mutationFn: (groupId) => groupApi.leaveGroup(groupId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
+    },
+  });
+}
+
+/**
+ * 그룹 초대 훅
+ */
+export function useInviteUser() {
+  return useMutation<GroupInvitationResponse, Error, number>({
+    mutationFn: (groupId) => groupApi.inviteUser(groupId),
+  });
+}
+
+/**
+ * 그룹 초대 수락 훅
+ */
+export function useAcceptInvitation() {
+  const queryClient = useQueryClient();
+
+  return useMutation<
+    GroupResponse,
+    Error,
+    {
+      groupId: number;
+      invitationId: number;
+      data: GroupInvitationAcceptRequest;
+    }
+  >({
+    mutationFn: ({ groupId, invitationId, data }) =>
+      groupApi.acceptInvitation(groupId, invitationId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
+    },
+  });
+}
+
+/**
+ * 그룹 챌린지 목록 조회 훅
+ */
+export function useGroupChallengesQuery(groupId: number) {
+  return useQuery(groupKeys.challenges(groupId));
+}
+
+/**
+ * 그룹 태스크 목록 조회 훅
+ */
+export function useGroupTasksQuery(groupId: number) {
+  return useQuery(groupKeys.challenges(groupId)._ctx.tasks);
+}
+
+/**
+ * 그룹 메시지 목록 조회 훅
+ */
+export function useGroupMessagesQuery(groupId: number, pageable: Pageable) {
+  return useQuery(groupKeys.messages(groupId, pageable));
+}
+
+/**
+ * 그룹 초대 조회 훅
+ */
+export function useInvitationQuery(groupId: number, invitationId: number) {
+  return useQuery(groupKeys.invitation(groupId, invitationId));
+}
