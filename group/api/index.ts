@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { client } from '../../lib/api/client';
 import { Pageable, SuccessResponse } from '../../base/api/types';
+import { createQueryKeys } from '@lukemorales/query-key-factory';
 import {
   ChatMessageListResponse,
   GroupChallengeListResponse,
@@ -10,24 +11,32 @@ import {
   GroupResponse,
   GroupTaskListResponse,
 } from './types';
+import { userKeys } from '@/user/api';
 
 /**
- * Group Query Key Factory
+ * Group Query Key Factory with @lukemorales/query-key-factory
  */
-export const groupKeys = {
-  all: ['group'] as const,
-  lists: () => [...groupKeys.all, 'list'] as const,
-  list: (id: number) => [...groupKeys.lists(), id] as const,
-  challenges: (id: number) => [...groupKeys.list(id), 'challenges'] as const,
-  challenge: (groupId: number, challengeId: number) =>
-    [...groupKeys.challenges(groupId), challengeId] as const,
-  tasks: (groupId: number, challengeId: number) =>
-    [...groupKeys.challenge(groupId, challengeId), 'tasks'] as const,
-  messages: (id: number) => [...groupKeys.list(id), 'messages'] as const,
-  invitations: (id: number) => [...groupKeys.list(id), 'invitations'] as const,
-  invitation: (groupId: number, invitationId: number) =>
-    [...groupKeys.invitations(groupId), invitationId] as const,
-};
+export const groupKeys = createQueryKeys('group', {
+  all: null,
+  challenges: (id: number) => ({
+    queryKey: [id],
+    queryFn: () => groupApi.getGroupChallenges(id),
+    contextQueries: {
+      tasks: {
+        queryKey: null,
+        queryFn: () => groupApi.getGroupTasks(id),
+      },
+    },
+  }),
+  invitation: (id: number, invitationId: number) => ({
+    queryKey: [id, invitationId],
+    queryFn: () => groupApi.getInvitation(id, invitationId),
+  }),
+  messages: (id: number, pageable: Pageable) => ({
+    queryKey: pageable ? [id, pageable] : [id],
+    queryFn: () => groupApi.getGroupMessages(id, pageable),
+  }),
+});
 
 /**
  * Group API 함수
@@ -149,7 +158,9 @@ export function useCreateGroup() {
   return useMutation<GroupResponse, Error, GroupCreationRequest>({
     mutationFn: (data) => groupApi.createGroup(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: groupKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
     },
   });
 }
@@ -163,7 +174,9 @@ export function useLeaveGroup() {
   return useMutation<void, Error, number>({
     mutationFn: (groupId) => groupApi.leaveGroup(groupId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: groupKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
     },
   });
 }
@@ -195,7 +208,9 @@ export function useAcceptInvitation() {
     mutationFn: ({ groupId, invitationId, data }) =>
       groupApi.acceptInvitation(groupId, invitationId, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: groupKeys.lists() });
+      queryClient.invalidateQueries({
+        queryKey: userKeys.me._ctx.groups.queryKey,
+      });
     },
   });
 }
@@ -204,38 +219,26 @@ export function useAcceptInvitation() {
  * 그룹 챌린지 목록 조회 훅
  */
 export function useGroupChallengesQuery(groupId: number) {
-  return useQuery({
-    queryKey: groupKeys.challenges(groupId),
-    queryFn: () => groupApi.getGroupChallenges(groupId),
-  });
+  return useQuery(groupKeys.challenges(groupId));
 }
 
 /**
  * 그룹 태스크 목록 조회 훅
  */
 export function useGroupTasksQuery(groupId: number) {
-  return useQuery({
-    queryKey: groupKeys.list(groupId),
-    queryFn: () => groupApi.getGroupTasks(groupId),
-  });
+  return useQuery(groupKeys.challenges(groupId)._ctx.tasks);
 }
 
 /**
  * 그룹 메시지 목록 조회 훅
  */
 export function useGroupMessagesQuery(groupId: number, pageable: Pageable) {
-  return useQuery({
-    queryKey: [...groupKeys.messages(groupId), pageable],
-    queryFn: () => groupApi.getGroupMessages(groupId, pageable),
-  });
+  return useQuery(groupKeys.messages(groupId, pageable));
 }
 
 /**
  * 그룹 초대 조회 훅
  */
 export function useInvitationQuery(groupId: number, invitationId: number) {
-  return useQuery({
-    queryKey: groupKeys.invitation(groupId, invitationId),
-    queryFn: () => groupApi.getInvitation(groupId, invitationId),
-  });
+  return useQuery(groupKeys.invitation(groupId, invitationId));
 }
