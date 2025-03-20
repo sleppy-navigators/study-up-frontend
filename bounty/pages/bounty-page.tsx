@@ -71,9 +71,6 @@ export function BountyPage() {
     <YStack flex={1} backgroundColor="$background">
       <ScrollView flex={1}>
         <ListSection items={bountyItems} />
-
-        <TaskSection title="현재 수행중인 태스크" items={tasks} />
-
         <TaskSection title="현재 수행중인 태스크" items={tasks} />
       </ScrollView>
 
