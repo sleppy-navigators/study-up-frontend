@@ -8,14 +8,8 @@ export const userKeys = createQueryKeys('user', {
   me: {
     queryKey: null,
     contextQueries: {
-      tasks: {
-        queryKey: null,
-        queryFn: () => userApi.getUserTasks(),
-      },
-      groups: {
-        queryKey: null,
-        queryFn: () => userApi.getUserGroups(),
-      },
+      tasks: null,
+      groups: null,
     },
   },
 });
@@ -49,12 +43,18 @@ export const userApi = {
  * 유저 태스크 목록 조회 훅
  */
 export function useUserTasksQuery() {
-  return useQuery(userKeys.me._ctx.tasks);
+  return useQuery({
+    queryKey: userKeys.me._ctx.tasks.queryKey,
+    queryFn: () => userApi.getUserTasks(),
+  });
 }
 
 /**
  * 유저 그룹 목록 조회 훅
  */
 export function useUserGroupsQuery() {
-  return useQuery(userKeys.me._ctx.groups);
+  return useQuery({
+    queryKey: userKeys.me._ctx.groups.queryKey,
+    queryFn: () => userApi.getUserGroups(),
+  });
 }

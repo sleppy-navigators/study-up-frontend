@@ -16,10 +16,12 @@ import { groupKeys } from '@/group/api';
  * Challenge Query Key Factory
  */
 export const challengeKeys = createQueryKeys('challenge', {
-  all: null,
-  tasks: (id: number) => ({
+  list: null,
+  detail: (id: number) => ({
     queryKey: [id],
-    queryFn: () => challengeApi.getChallengeTasks(id),
+    contextQueries: {
+      tasks: null,
+    },
   }),
 });
 
@@ -87,7 +89,7 @@ export function useCreateChallenge() {
       challengeApi.createChallenge(groupId, data),
     onSuccess: (_, { groupId }) => {
       queryClient.invalidateQueries({
-        queryKey: groupKeys.challenges(groupId),
+        queryKey: groupKeys.detail(groupId)._ctx.challenges.queryKey,
       });
     },
   });
@@ -113,7 +115,7 @@ export function useCompleteTask() {
     onSuccess: (_, { challengeId }) => {
       // 챌린지의 태스크 목록을 갱신
       queryClient.invalidateQueries({
-        queryKey: challengeKeys.tasks(challengeId).queryKey,
+        queryKey: challengeKeys.detail(challengeId)._ctx.tasks.queryKey,
       });
       // 유저의 태스크 목록을 갱신
       queryClient.invalidateQueries({
@@ -127,5 +129,8 @@ export function useCompleteTask() {
  * 챌린지 태스크 목록 조회 훅
  */
 export function useChallengeTasksQuery(challengeId: number) {
-  return useQuery(challengeKeys.tasks(challengeId));
+  return useQuery({
+    queryKey: challengeKeys.detail(challengeId)._ctx.tasks.queryKey,
+    queryFn: () => challengeApi.getChallengeTasks(challengeId),
+  });
 }

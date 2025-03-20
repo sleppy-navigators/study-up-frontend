@@ -13,28 +13,16 @@ import {
 } from './types';
 import { userKeys } from '@/user/api';
 
-/**
- * Group Query Key Factory with @lukemorales/query-key-factory
- */
 export const groupKeys = createQueryKeys('group', {
-  all: null,
-  challenges: (id: number) => ({
+  list: null,
+  detail: (id: number) => ({
     queryKey: [id],
-    queryFn: () => groupApi.getGroupChallenges(id),
     contextQueries: {
-      tasks: {
-        queryKey: null,
-        queryFn: () => groupApi.getGroupTasks(id),
-      },
+      challenges: null,
+      tasks: null,
+      invitation: (invitationId: number) => [invitationId],
+      messages: (pageable: Pageable) => [pageable],
     },
-  }),
-  invitation: (id: number, invitationId: number) => ({
-    queryKey: [id, invitationId],
-    queryFn: () => groupApi.getInvitation(id, invitationId),
-  }),
-  messages: (id: number, pageable: Pageable) => ({
-    queryKey: pageable ? [id, pageable] : [id],
-    queryFn: () => groupApi.getGroupMessages(id, pageable),
   }),
 });
 
@@ -219,26 +207,38 @@ export function useAcceptInvitation() {
  * 그룹 챌린지 목록 조회 훅
  */
 export function useGroupChallengesQuery(groupId: number) {
-  return useQuery(groupKeys.challenges(groupId));
+  return useQuery({
+    queryKey: groupKeys.detail(groupId)._ctx.challenges.queryKey,
+    queryFn: () => groupApi.getGroupChallenges(groupId),
+  });
 }
 
 /**
  * 그룹 태스크 목록 조회 훅
  */
 export function useGroupTasksQuery(groupId: number) {
-  return useQuery(groupKeys.challenges(groupId)._ctx.tasks);
+  return useQuery({
+    queryKey: groupKeys.detail(groupId)._ctx.tasks.queryKey,
+    queryFn: () => groupApi.getGroupTasks(groupId),
+  });
 }
 
 /**
  * 그룹 메시지 목록 조회 훅
  */
 export function useGroupMessagesQuery(groupId: number, pageable: Pageable) {
-  return useQuery(groupKeys.messages(groupId, pageable));
+  return useQuery({
+    queryKey: groupKeys.detail(groupId)._ctx.messages(pageable).queryKey,
+    queryFn: () => groupApi.getGroupMessages(groupId, pageable),
+  });
 }
 
 /**
  * 그룹 초대 조회 훅
  */
 export function useInvitationQuery(groupId: number, invitationId: number) {
-  return useQuery(groupKeys.invitation(groupId, invitationId));
+  return useQuery({
+    queryKey: groupKeys.detail(groupId)._ctx.invitation(invitationId).queryKey,
+    queryFn: () => groupApi.getInvitation(groupId, invitationId),
+  });
 }
