@@ -21,6 +21,7 @@ export default function RootLayout() {
         <SafeAreaProvider>
           <QueryProvider>
             <SafeAreaView style={{ flex: 1 }}>
+              <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
               <Stack
                 screenOptions={{
                   header: (props) => <Header />,
@@ -33,7 +34,6 @@ export default function RootLayout() {
                 <Stack.Screen name="group" options={{ headerShown: true }} />
               </Stack>
             </SafeAreaView>
-            <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
           </QueryProvider>
         </SafeAreaProvider>
       </ThemeProvider>
