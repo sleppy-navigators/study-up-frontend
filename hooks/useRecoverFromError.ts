@@ -1,13 +1,12 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { useSetAtom } from 'jotai';
-import { authActions } from '@/lib/auth/store';
+import { authActions } from '@/lib/auth/authStore';
 import { useCallback } from 'react';
 import { ResetOptions } from '@/lib/errors/http';
 
 export const useRecoverFromError = () => {
   const queryClient = useQueryClient();
-  const clearTokens = useSetAtom(authActions.clearTokens);
 
   const recoverFromError = useCallback(
     async (resetOptions: ResetOptions) => {
@@ -23,7 +22,7 @@ export const useRecoverFromError = () => {
       }
 
       if (shouldClearAuth) {
-        await clearTokens();
+        await authActions.clearTokens();
       }
 
       if (shouldClearNavigation) {
