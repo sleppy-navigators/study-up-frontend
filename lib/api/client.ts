@@ -1,6 +1,5 @@
 import ky, { HTTPError, KyResponse, NormalizedOptions, KyRequest } from 'ky';
 import { match, P } from 'ts-pattern';
-import { createStore } from 'jotai/vanilla';
 import {
   UnauthorizedError,
   ForbiddenError,
@@ -12,6 +11,7 @@ import {
   ServiceUnavailableError,
 } from '../errors/http';
 import { authStore, authAtom, authActions } from '../auth/authStore';
+import { authApi } from '@/auth/api';
 
 const handleTokenRefresh = async (
   request: KyRequest,
@@ -24,21 +24,14 @@ const handleTokenRefresh = async (
 
   const { accessToken, refreshToken } = authStore.get(authAtom);
 
+  if (!accessToken || !refreshToken) {
+    authActions.clearTokens();
+    throw new UnauthorizedError(response, request, options);
+  }
+
   try {
-    const { accessToken: newAccessToken, refreshToken: newRefreshToken } = (
-      await ky
-        .post('auth/refresh', {
-          prefixUrl: process.env.EXPO_PUBLIC_API_URL,
-          json: {
-            accessToken,
-            refreshToken,
-          },
-        })
-        .json<{
-          message: string;
-          data: { accessToken: string; refreshToken: string };
-        }>()
-    ).data;
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      await authApi.refreshToken(accessToken, refreshToken);
 
     authActions.setTokens({
       accessToken: newAccessToken,
