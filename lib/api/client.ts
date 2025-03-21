@@ -17,34 +17,6 @@ import {
 
 const store = createStore();
 
-let refreshPromise: Promise<void> | null = null;
-const requestQueue: (() => Promise<any>)[] = [];
-
-const addToQueue = (request: () => Promise<any>) => {
-  return new Promise((resolve, reject) => {
-    requestQueue.push(() => request().then(resolve).catch(reject));
-  });
-};
-
-const executeQueue = () => {
-  const queue = [...requestQueue];
-  requestQueue.length = 0;
-
-  queue.forEach((request) => {
-    request();
-  });
-};
-
-const clearQueue = () => {
-  const queue = [...requestQueue];
-  requestQueue.length = 0;
-
-  queue.forEach((request) => {
-    // Ignore all the requests in the queue
-    request().catch(() => {});
-  });
-};
-
 const handleTokenRefresh = async (
   request: KyRequest,
   options: NormalizedOptions,
@@ -52,10 +24,6 @@ const handleTokenRefresh = async (
 ): Promise<KyResponse> => {
   if (response.status !== 401) {
     return response;
-  }
-
-  if (refreshPromise !== null) {
-    return addToQueue(() => client(request)) as Promise<KyResponse>;
   }
 
   try {
@@ -97,9 +65,7 @@ const handleTokenRefresh = async (
 };
 
 const handleError = async (error: HTTPError): Promise<HTTPError> => {
-  const response = error.response;
-  const request = error.request;
-  const options = error.options;
+  const { request, response, options } = error;
 
   if (error instanceof TypeError) {
     if (error.message === 'Failed to fetch') {
