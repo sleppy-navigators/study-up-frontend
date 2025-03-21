@@ -1,5 +1,6 @@
 import { atom, createStore } from 'jotai';
 import { tokenStorage } from './storage';
+import { TokenResponse } from '@/auth/api/types';
 
 interface AuthState {
   isAuthenticated: boolean;
@@ -19,7 +20,7 @@ export const authAtom = atom<AuthState>(initialState);
 export const authStore = createStore();
 
 export const authActions = {
-  setTokens: async (tokens: { accessToken: string; refreshToken: string }) => {
+  setTokens: async (tokens: TokenResponse) => {
     await tokenStorage.save(tokens);
     authStore.set(authAtom, {
       isAuthenticated: true,
