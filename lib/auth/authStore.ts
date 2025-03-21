@@ -53,5 +53,6 @@ export const authActions = {
         isLoading: false,
       };
     });
+    return tokens;
   },
 };
