@@ -44,9 +44,14 @@ export const authActions = {
           isAuthenticated: true,
           accessToken: tokens.accessToken,
           refreshToken: tokens.refreshToken,
+          isLoading: false,
         };
       }
-      return { ...prevState, isLoading: false };
+      return {
+        ...prevState,
+        isAuthenticated: false,
+        isLoading: false,
+      };
     });
   },
 };
