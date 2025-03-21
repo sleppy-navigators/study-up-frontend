@@ -29,7 +29,7 @@ export const useRecoverFromError = () => {
         router.replace(navigationTarget);
       }
     },
-    [queryClient, clearTokens]
+    [queryClient]
   );
 
   return { recoverFromError };
