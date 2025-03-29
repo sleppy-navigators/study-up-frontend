@@ -55,7 +55,7 @@
 
 **사용된 훅**:
 
-- `useSignInUser`
+- `useSignInMutation`
 - `useRefreshToken`
 
 **특이사항**:
