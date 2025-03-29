@@ -1,25 +1,8 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { Button, Spinner, Text, YStack } from 'tamagui';
 import { SuspenseProvider } from '@/components/SuspenseProvider';
-import { ErrorBoundaryProps, router } from 'expo-router';
-import { ErrorFallback } from '@/components/ErrorFallback';
-import { useRecoverFromError } from '@/hooks/useRecoverFromError';
-import { ResetOptions } from '@/lib/errors/http';
+import { router } from 'expo-router';
 import { useSignInMutation } from '@/auth/api';
-
-export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
-  const { recoverFromError } = useRecoverFromError();
-
-  const handleReset = useCallback(
-    async (resetOptions: ResetOptions) => {
-      await recoverFromError(resetOptions);
-      retry();
-    },
-    [recoverFromError, retry]
-  );
-
-  return <ErrorFallback error={error} onReset={handleReset} />;
-}
 
 function Index() {
   const { mutate, isPending } = useSignInMutation({
