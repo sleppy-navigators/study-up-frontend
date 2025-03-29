@@ -24,7 +24,7 @@ React Query를 활용한 API 통신 구조를 구축하고, 쿼리 키 관리를
 
    - 인증 관련 타입 정의 (`types.ts`)
    - 로그인 및 토큰 갱신 API 함수 구현 (`index.ts`)
-   - `useSignInUser`, `useRefreshToken` 훅 구현
+   - `useSignInMutation`, `useRefreshToken` 훅 구현
 
 2. User 도메인 구현 (`user/api/`)
 
