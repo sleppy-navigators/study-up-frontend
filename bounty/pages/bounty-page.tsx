@@ -1,16 +1,11 @@
 import { ScrollView, YStack } from 'tamagui';
-import { useState } from 'react';
+
 import { TaskSection } from '@/bounty/components/task-section';
 import type { TaskItemProps } from '@/bounty/components/task-item';
 import { ListSection } from '@/base/components/list-section';
 import type { ListItemProps } from '@/base/components/list-item';
-import { BottomNavigation } from '@/base/components/bottom-navigation';
 
 export function BountyPage() {
-  const [activeTab, setActiveTab] = useState<'home' | 'community' | 'profile'>(
-    'home'
-  );
-
   const bountyItems: ListItemProps[] = [
     {
       imageUrl:
@@ -73,8 +68,6 @@ export function BountyPage() {
         <ListSection items={bountyItems} />
         <TaskSection title="현재 수행중인 태스크" items={tasks} />
       </ScrollView>
-
-      <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
     </YStack>
   );
 }
