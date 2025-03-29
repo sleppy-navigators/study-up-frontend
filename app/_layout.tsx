@@ -35,14 +35,14 @@ export default function RootLayout() {
                 <Stack.Screen name="chat" />
                 <Stack.Screen name="bounty" options={{ headerShown: true }} />
                 <Stack.Screen name="group" options={{ headerShown: true }} />
+                <GlobalLoadingFallback>
+                  <AuthStateProvider>
+                    <AuthGuard>
+                      <Slot />
+                    </AuthGuard>
+                  </AuthStateProvider>
+                </GlobalLoadingFallback>
               </Stack>
-              <GlobalLoadingFallback>
-                <AuthStateProvider>
-                  <AuthGuard>
-                    <Slot />
-                  </AuthGuard>
-                </AuthStateProvider>
-              </GlobalLoadingFallback>
             </SafeAreaView>
           </QueryProvider>
         </SafeAreaProvider>
