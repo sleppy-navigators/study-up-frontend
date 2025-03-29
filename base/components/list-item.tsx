@@ -50,10 +50,16 @@ export function ListItem({
       cursor={onPress ? 'pointer' : 'default'}>
       {leftContent}
 
-      {imageUrl && (
+      {imageUrl ? (
         <Avatar circular size="$4">
           <Avatar.Image src={imageUrl} />
           <Avatar.Fallback backgroundColor="$gray5" />
+        </Avatar>
+      ) : (
+        <Avatar circular size="$4">
+          <Avatar.Fallback backgroundColor="$gray5">
+            <Text>{title.charAt(0).toUpperCase()}</Text>
+          </Avatar.Fallback>
         </Avatar>
       )}
 
