@@ -56,7 +56,7 @@ export function Header(props: HeaderProps) {
   const handleAdd =
     props.onAdd ||
     (routeConfig.showAddButton
-      ? () => console.log(`Add pressed on ${pathname}`)
+      ? () => router.push('/group/create')
       : undefined);
 
   return (
