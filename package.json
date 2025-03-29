@@ -25,6 +25,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@stomp/stompjs": "^7.0.0",
+    "@tamagui/animations-react-native": "1.125.20",
     "@tamagui/babel-plugin": "1.125.20",
     "@tamagui/config": "1.125.20",
     "@tamagui/font-inter": "1.125.20",
