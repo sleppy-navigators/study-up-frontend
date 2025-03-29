@@ -25,9 +25,9 @@ export function ListSection({
         ))}
 
       <YStack gap="$2" backgroundColor="$background" borderRadius="$2">
-        {items.map((item, index) => (
-          <ListItem key={index} {...item} />
-        ))}
+        {items.map((item, index) =>
+          renderItem ? renderItem(item) : <ListItem key={index} {...item} />
+        )}
       </YStack>
     </YStack>
   );
