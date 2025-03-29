@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
 import { client } from '../../lib/api/client';
 import { SuccessResponse } from '../../base/api/types';
@@ -53,7 +53,7 @@ export function useUserTasksQuery() {
  * 유저 그룹 목록 조회 훅
  */
 export function useUserGroupsQuery() {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: userKeys.me._ctx.groups.queryKey,
     queryFn: () => userApi.getUserGroups(),
   });
