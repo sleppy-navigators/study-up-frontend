@@ -25,17 +25,17 @@ export function InvitationBottomSheet({
   onOpenChange,
 }: InvitationBottomSheetProps) {
   const [copied, setCopied] = useState(false);
-  const inviteUserMutation = useInviteUser();
+  const inviteUser = useInviteUser();
 
   // 초대 링크 생성
   const handleCreateInvitation = () => {
-    inviteUserMutation.mutate(groupId);
+    inviteUser.mutate(groupId);
   };
 
   // 딥링크 URL 생성
   const generateInvitationUrl = () => {
-    if (!inviteUserMutation.data) return '';
-    const { invitationId, invitationKey } = inviteUserMutation.data;
+    if (!inviteUser.data) return '';
+    const { invitationId, invitationKey } = inviteUser.data;
     return `studyup://invitations/${invitationId}?invitationKey=${invitationKey}`;
   };
 
@@ -74,18 +74,18 @@ export function InvitationBottomSheet({
             초대 링크를 공유하여 다른 사용자를 그룹에 초대할 수 있습니다.
           </Paragraph>
 
-          {inviteUserMutation.isPending ? (
+          {inviteUser.isPending ? (
             <YStack height="$10" justifyContent="center" alignItems="center">
               <Spinner size="large" color="$yellow9" />
             </YStack>
-          ) : inviteUserMutation.isError ? (
+          ) : inviteUser.isError ? (
             <YStack gap="$2">
               <Text color="$red9">초대 링크를 생성하는데 실패했습니다.</Text>
               <Button onPress={handleCreateInvitation} themeInverse>
                 다시 시도
               </Button>
             </YStack>
-          ) : inviteUserMutation.data ? (
+          ) : inviteUser.data ? (
             <YStack gap="$2">
               <XStack
                 backgroundColor="$gray2"
