@@ -25,22 +25,25 @@ export function InvitationBottomSheet({
   onOpenChange,
 }: InvitationBottomSheetProps) {
   const [copied, setCopied] = useState(false);
-  const {
-    mutate: inviteUser,
-    data: invitationData,
-    isPending,
-    isError,
-  } = useInviteUser();
+  const inviteUserMutation = useInviteUser();
 
   // 초대 링크 생성
   const handleCreateInvitation = () => {
-    inviteUser(groupId);
+    inviteUserMutation.mutate(groupId);
   };
 
-  // 초대 ID 복사
-  const handleCopyInvitationId = async () => {
-    if (invitationData?.invitationId) {
-      await Clipboard.setStringAsync(invitationData.invitationId.toString());
+  // 딥링크 URL 생성
+  const generateInvitationUrl = () => {
+    if (!inviteUserMutation.data) return '';
+    const { invitationId, invitationKey } = inviteUserMutation.data;
+    return `studyup://invitations/${invitationId}?invitationKey=${invitationKey}`;
+  };
+
+  // 딥링크 URL 복사
+  const handleCopyInvitationUrl = async () => {
+    const url = generateInvitationUrl();
+    if (url) {
+      await Clipboard.setStringAsync(url);
       setCopied(true);
 
       // 3초 후 복사 상태 초기화
@@ -68,21 +71,21 @@ export function InvitationBottomSheet({
 
         <YStack gap="$4">
           <Paragraph theme="alt2">
-            초대 ID를 공유하여 다른 사용자를 그룹에 초대할 수 있습니다.
+            초대 링크를 공유하여 다른 사용자를 그룹에 초대할 수 있습니다.
           </Paragraph>
 
-          {isPending ? (
+          {inviteUserMutation.isPending ? (
             <YStack height="$10" justifyContent="center" alignItems="center">
               <Spinner size="large" color="$yellow9" />
             </YStack>
-          ) : isError ? (
+          ) : inviteUserMutation.isError ? (
             <YStack gap="$2">
-              <Text color="$red9">초대 ID를 생성하는데 실패했습니다.</Text>
+              <Text color="$red9">초대 링크를 생성하는데 실패했습니다.</Text>
               <Button onPress={handleCreateInvitation} themeInverse>
                 다시 시도
               </Button>
             </YStack>
-          ) : invitationData ? (
+          ) : inviteUserMutation.data ? (
             <YStack gap="$2">
               <XStack
                 backgroundColor="$gray2"
@@ -90,14 +93,14 @@ export function InvitationBottomSheet({
                 borderRadius="$4"
                 justifyContent="space-between"
                 alignItems="center">
-                <Text fontSize="$5" fontWeight="bold">
-                  {invitationData.invitationId}
+                <Text fontSize="$4" fontWeight="bold" numberOfLines={1}>
+                  {generateInvitationUrl()}
                 </Text>
                 <Button
                   size="$3"
                   circular
                   backgroundColor={copied ? '$green9' : '$yellow9'}
-                  onPress={handleCopyInvitationId}>
+                  onPress={handleCopyInvitationUrl}>
                   {copied ? (
                     <Check size="$1.5" color="$color" />
                   ) : (
@@ -116,7 +119,7 @@ export function InvitationBottomSheet({
               color="$color"
               size="$4"
               height="$6">
-              초대 ID 생성하기
+              초대 링크 생성하기
             </Button>
           )}
         </YStack>
