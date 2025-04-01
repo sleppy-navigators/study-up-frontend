@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { YStack, Text, Button, XStack } from 'tamagui';
 import { match, P } from 'ts-pattern';
 import {
@@ -83,6 +84,13 @@ export const ErrorFallback = ({ error, onReset }: ErrorFallbackProps) => {
         onPress: handlePress,
       },
     }));
+
+  useEffect(() => {
+    if (error instanceof UnauthorizedError) {
+      const resetOptions = error.resetOptions;
+      onReset(resetOptions);
+    }
+  }, [error, onReset]);
 
   return (
     <YStack flex={1} gap="$4">
