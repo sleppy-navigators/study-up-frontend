@@ -1,4 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from '@tanstack/react-query';
 import { client } from '../../lib/api/client';
 import { Pageable, SuccessResponse } from '../../base/api/types';
 import { createQueryKeys } from '@lukemorales/query-key-factory';
@@ -207,7 +211,7 @@ export function useAcceptInvitation() {
  * 그룹 챌린지 목록 조회 훅
  */
 export function useGroupChallengesQuery(groupId: number) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: groupKeys.detail(groupId)._ctx.challenges.queryKey,
     queryFn: () => groupApi.getGroupChallenges(groupId),
   });
@@ -217,7 +221,7 @@ export function useGroupChallengesQuery(groupId: number) {
  * 그룹 태스크 목록 조회 훅
  */
 export function useGroupTasksQuery(groupId: number) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: groupKeys.detail(groupId)._ctx.tasks.queryKey,
     queryFn: () => groupApi.getGroupTasks(groupId),
   });
@@ -227,7 +231,7 @@ export function useGroupTasksQuery(groupId: number) {
  * 그룹 메시지 목록 조회 훅
  */
 export function useGroupMessagesQuery(groupId: number, pageable: Pageable) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: groupKeys.detail(groupId)._ctx.messages(pageable).queryKey,
     queryFn: () => groupApi.getGroupMessages(groupId, pageable),
   });
@@ -237,7 +241,7 @@ export function useGroupMessagesQuery(groupId: number, pageable: Pageable) {
  * 그룹 초대 조회 훅
  */
 export function useInvitationQuery(groupId: number, invitationId: number) {
-  return useQuery({
+  return useSuspenseQuery({
     queryKey: groupKeys.detail(groupId)._ctx.invitation(invitationId).queryKey,
     queryFn: () => groupApi.getInvitation(groupId, invitationId),
   });
