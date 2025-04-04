@@ -77,6 +77,16 @@ export const useAuthStore = create<AuthStoreType>()(
         accessToken: state.accessToken,
         refreshToken: state.refreshToken,
       }),
+      onRehydrateStorage: () => {
+        return (state, error) => {
+          if (error) {
+            state?.setError(true);
+          }
+          if (state) {
+            state.load();
+          }
+        };
+      },
     }
   )
 );
