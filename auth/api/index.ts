@@ -1,4 +1,4 @@
-import { useMutation, useSuspenseQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { client } from '../../lib/api/client';
 import { SuccessResponse } from '../../base/api/types';
 import {
@@ -9,9 +9,8 @@ import {
   SignInRequest,
   TokenResponse,
 } from './types';
-import { authActions } from '@/lib/auth/authStore';
 import { signInWithGoogle } from '@/lib/firebase';
-import { authStore, authAtom } from '@/lib/auth/authStore';
+import { useAuthStore } from '../stores/authStore';
 
 /**
  * Auth API 함수
@@ -51,6 +50,7 @@ export const authApi = {
  * 로그인 훅
  */
 export function useSignInMutation(options?: { onSignIn: () => void }) {
+  const login = useAuthStore((state) => state.login);
   return useMutation<TokenResponse, Error, SignInParams>({
     mutationFn: async ({ provider }) => {
       if (provider === 'GOOGLE') {
@@ -60,7 +60,7 @@ export function useSignInMutation(options?: { onSignIn: () => void }) {
       throw new Error('Invalid provider');
     },
     onSuccess: async (data) => {
-      await authActions.setTokens(data);
+      await login(data);
       options?.onSignIn?.();
     },
   });
@@ -73,22 +73,5 @@ export function useRefreshToken() {
   return useMutation<TokenResponse, Error, RefreshTokenParams>({
     mutationFn: ({ accessToken, refreshToken }) =>
       authApi.refreshToken(accessToken, refreshToken),
-  });
-}
-
-/**
- * 인증 상태 쿼리 훅
- * 앱 시작 시 인증 상태를 초기화하고 가져오는 데 사용
- */
-export function useAuthStateQuery() {
-  return useSuspenseQuery({
-    queryKey: ['auth', 'state'],
-    queryFn: async () => {
-      await authActions.loadTokens();
-      const authState = authStore.get(authAtom);
-      return {
-        isAuthenticated: authState.isAuthenticated,
-      };
-    },
   });
 }

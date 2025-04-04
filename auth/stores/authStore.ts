@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { tokenStorage } from '@/lib/auth/storage';
+import { TokenResponse } from '../api/types';
 
 export interface AuthStateType {
   isAuthenticated: boolean;
@@ -11,7 +12,7 @@ export interface AuthStateType {
 }
 
 export interface AuthActionsType {
-  login: (accessToken: string, refreshToken: string) => void;
+  login: (tokenResponse: TokenResponse) => void;
   logout: () => void;
   load: () => void;
   setError: (error: boolean) => void;
@@ -36,7 +37,7 @@ export const useAuthStore = create<AuthStoreType>()(
     (set, get) => ({
       ...initialState,
 
-      login: (accessToken: string, refreshToken: string) => {
+      login: ({ accessToken, refreshToken }: TokenResponse) => {
         set({
           isAuthenticated: true,
           isLoading: false,

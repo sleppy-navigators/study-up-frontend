@@ -33,7 +33,10 @@ const handleTokenRefresh = async (
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await authApi.refreshToken(accessToken, refreshToken);
 
-    authService.login(newAccessToken, newRefreshToken);
+    authService.login({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
   } catch (error) {
     authService.logout();
     throw new UnauthorizedError(response, request, options);
