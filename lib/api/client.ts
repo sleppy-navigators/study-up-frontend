@@ -10,7 +10,7 @@ import {
   ServerError,
   ServiceUnavailableError,
 } from '../errors/http';
-import { authStore, authAtom, authActions } from '../auth/authStore';
+import { authService } from '@/auth/services/auth';
 import { authApi } from '@/auth/api';
 
 const handleTokenRefresh = async (
@@ -22,10 +22,10 @@ const handleTokenRefresh = async (
     return response;
   }
 
-  const { accessToken, refreshToken } = authStore.get(authAtom);
+  const { accessToken, refreshToken } = authService.getTokens();
 
   if (!accessToken || !refreshToken) {
-    authActions.clearTokens();
+    authService.logout();
     throw new UnauthorizedError(response, request, options);
   }
 
@@ -33,12 +33,9 @@ const handleTokenRefresh = async (
     const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
       await authApi.refreshToken(accessToken, refreshToken);
 
-    authActions.setTokens({
-      accessToken: newAccessToken,
-      refreshToken: newRefreshToken,
-    });
+    authService.login(newAccessToken, newRefreshToken);
   } catch (error) {
-    authActions.clearTokens();
+    authService.logout();
     throw new UnauthorizedError(response, request, options);
   }
 
@@ -63,7 +60,7 @@ const AUTH_HEADER = 'Authorization';
 const BEARER_PREFIX = 'Bearer ';
 
 const setAuthorizationHeader = (request: KyRequest) => {
-  const { accessToken } = authStore.get(authAtom);
+  const { accessToken } = authService.getTokens();
   if (accessToken) {
     request.headers.set(AUTH_HEADER, `${BEARER_PREFIX}${accessToken}`);
   }

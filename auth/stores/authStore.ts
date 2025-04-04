@@ -15,7 +15,10 @@ export interface AuthActionsType {
   logout: () => void;
   load: () => void;
   setError: (error: boolean) => void;
-  getAccessToken: () => string | null;
+  getTokens: () => {
+    accessToken: string | null;
+    refreshToken: string | null;
+  };
 }
 
 export type AuthStoreType = AuthStateType & AuthActionsType;
@@ -66,8 +69,11 @@ export const useAuthStore = create<AuthStoreType>()(
         }));
       },
 
-      getAccessToken: () => {
-        return get().accessToken;
+      getTokens: () => {
+        return {
+          accessToken: get().accessToken,
+          refreshToken: get().refreshToken,
+        };
       },
     }),
     {
