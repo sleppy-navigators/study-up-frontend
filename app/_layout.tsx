@@ -1,4 +1,4 @@
-import { Slot, Stack } from 'expo-router';
+import { Slot, Stack, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { QueryProvider } from '@/lib/react-query';
@@ -12,12 +12,13 @@ import {
 } from '@react-navigation/native';
 import { Header } from '@/base/components/header';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { AuthGuard } from '@/components/AuthGuard';
-import { AuthStateProvider } from '@/auth/providers/AuthStateProvider';
 import GlobalLoadingFallback from '@/base/providers/global-loading-fallback';
+import AuthGuardProvider from '@/auth/providers/AuthGuardProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const pathname = usePathname();
+  console.log('pathname in RootLayout', pathname);
   return (
     <TamaguiProvider config={appConfig} defaultTheme={colorScheme!}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -36,11 +37,9 @@ export default function RootLayout() {
                 <Stack.Screen name="bounty" options={{ headerShown: true }} />
                 <Stack.Screen name="group" options={{ headerShown: true }} />
                 <GlobalLoadingFallback>
-                  <AuthStateProvider>
-                    <AuthGuard>
-                      <Slot />
-                    </AuthGuard>
-                  </AuthStateProvider>
+                  <AuthGuardProvider>
+                    <Slot />
+                  </AuthGuardProvider>
                 </GlobalLoadingFallback>
               </Stack>
             </SafeAreaView>
