@@ -6,14 +6,22 @@ const secureStoreOptions: SecureStore.SecureStoreOptions = {
   keychainAccessible: SecureStore.WHEN_UNLOCKED,
 };
 
+interface StorageStateType {
+  accessToken: string | null;
+  refreshToken: string | null;
+}
+
 export const tokenStorage = {
-  async getItem(name: string): Promise<StorageValue<string> | null> {
+  async getItem(name: string): Promise<StorageValue<StorageStateType> | null> {
     const value = await SecureStore.getItemAsync(name, secureStoreOptions);
     if (!value) return null;
-    return JSON.parse(value);
+    return JSON.parse(value) as StorageValue<StorageStateType>;
   },
 
-  async setItem(name: string, value: StorageValue<string>): Promise<void> {
+  async setItem(
+    name: string,
+    value: StorageValue<StorageStateType>
+  ): Promise<void> {
     await SecureStore.setItemAsync(
       name,
       JSON.stringify(value),
@@ -24,4 +32,4 @@ export const tokenStorage = {
   async removeItem(name: string): Promise<void> {
     await SecureStore.deleteItemAsync(name, secureStoreOptions);
   },
-} satisfies PersistStorage<string>;
+} satisfies PersistStorage<StorageStateType>;
