@@ -27,8 +27,7 @@ export class UnauthorizedError extends HTTPError {
     this.resetOptions = {
       shouldClearCache: true,
       shouldClearAuth: true,
-      shouldClearNavigation: true,
-      navigationTarget: '/login',
+      shouldClearNavigation: false,
     };
   }
 }
