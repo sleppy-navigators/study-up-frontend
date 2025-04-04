@@ -58,7 +58,8 @@
           "configureAndroidBackup": true,
           "faceIDPermission": "Allow StudyUp to access your Face ID biometric data."
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
