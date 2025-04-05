@@ -1,8 +1,7 @@
-import { Slot, Stack, usePathname } from 'expo-router';
+import { Slot, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { QueryProvider } from '@/lib/react-query';
-import { TamaguiProvider } from 'tamagui';
 import appConfig from '@/tamagui.config';
 import { useColorScheme } from 'react-native';
 import {
@@ -12,13 +11,13 @@ import {
 } from '@react-navigation/native';
 import { Header } from '@/base/components/header';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { TamaguiProvider } from 'tamagui';
 import GlobalLoadingFallback from '@/base/providers/global-loading-fallback';
 import AuthGuardProvider from '@/auth/providers/AuthGuardProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const pathname = usePathname();
-  console.log('pathname in RootLayout', pathname);
+
   return (
     <TamaguiProvider config={appConfig} defaultTheme={colorScheme!}>
       <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
@@ -26,6 +25,7 @@ export default function RootLayout() {
           <QueryProvider>
             <SafeAreaView style={{ flex: 1 }}>
               <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
+
               <Stack
                 screenOptions={{
                   header: (props) => <Header />,
@@ -36,11 +36,10 @@ export default function RootLayout() {
                 <Stack.Screen name="chat" />
                 <Stack.Screen name="bounty" options={{ headerShown: true }} />
                 <Stack.Screen name="group" options={{ headerShown: true }} />
-                <GlobalLoadingFallback>
-                  <AuthGuardProvider>
-                    <Slot />
-                  </AuthGuardProvider>
-                </GlobalLoadingFallback>
+                <Stack.Screen
+                  name="group/create"
+                  options={{ headerShown: true }}
+                />
               </Stack>
             </SafeAreaView>
           </QueryProvider>
