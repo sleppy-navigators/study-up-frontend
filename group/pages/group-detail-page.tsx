@@ -8,14 +8,16 @@ import {
   createChallengeAction,
 } from '@/base/components/header';
 import { useGroupChallengesQuery, useGroupTasksQuery } from '@/group/api';
+import { GroupChallengeListItem } from '@/group/api/types';
 import { TaskSection } from '@/group/components/task-section';
 import { ChallengeSection } from '@/group/components/challenge-section';
 import { InvitationBottomSheet } from '@/group/components/invitation-bottom-sheet';
 import { Tag } from '@/app/components/Tag';
 import { TagRow } from '@/app/components/TagRow';
+import { ChallengeDetailSection } from '@/challenge/components/challenge-detail-section';
 
 // Tab 상태를 나타내는 타입
-type TabState = 'none' | 'chat' | 'challenge';
+type TabState = 'none' | 'chat' | 'challenge' | 'challenge-detail';
 
 interface GroupDetailPageProps {
   groupId: number;
@@ -26,6 +28,8 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
   const [showSearch, setShowSearch] = useState(false);
   const [showInvitation, setShowInvitation] = useState(false);
   const [activeTab, setActiveTab] = useState<TabState>('none');
+  const [selectedChallenge, setSelectedChallenge] =
+    useState<GroupChallengeListItem | null>(null);
 
   const { data: challengesData, isLoading: isLoadingChallenges } =
     useGroupChallengesQuery(groupId);
@@ -34,7 +38,13 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
 
   // 뒤로가기 핸들러
   const handleBack = () => {
-    router.back();
+    // 챌린지 상세 화면에서는 챌린지 목록으로 돌아감
+    if (activeTab === 'challenge-detail') {
+      setActiveTab('challenge');
+      setSelectedChallenge(null);
+    } else {
+      router.back();
+    }
   };
 
   // 검색 핸들러
@@ -55,12 +65,39 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
 
   // 탭 선택 핸들러
   const handleTabPress = (tab: TabState) => {
+    // 챌린지 상세 화면에서 챌린지 탭을 누르면 챌린지 목록으로 돌아감
+    if (activeTab === 'challenge-detail' && tab === 'challenge') {
+      setSelectedChallenge(null);
+      setActiveTab('challenge');
+      return;
+    }
+
     // 같은 탭을 다시 클릭하면 기본 상태로 돌아감
     if (activeTab === tab) {
       setActiveTab('none');
     } else {
       setActiveTab(tab);
     }
+
+    // 챌린지 상세에서 다른 탭으로 이동하면 선택된 챌린지 초기화
+    if (activeTab === 'challenge-detail' && tab !== 'challenge-detail') {
+      setSelectedChallenge(null);
+    }
+  };
+
+  // 챌린지 선택 핸들러
+  const handleChallengePress = (challenge: GroupChallengeListItem) => {
+    setSelectedChallenge(challenge);
+    setActiveTab('challenge-detail');
+  };
+
+  // 테스크 인증 핸들러
+  const handleCertifyTask = (taskId: number) => {
+    // 현재는 콘솔에 로그만 출력
+    console.log(`테스크 ${taskId} 인증을 위한 화면으로 이동 또는 모달 표시`);
+
+    // 추후 인증 페이지로 이동하거나 인증 모달을 표시하는 코드 추가
+    // router.push(`/challenge/${selectedChallenge?.id}/tasks/${taskId}/certify`);
   };
 
   // 헤더 액션 버튼 설정
@@ -120,6 +157,17 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
 
   // 콘텐츠 렌더링 함수
   const renderContent = () => {
+    // 챌린지 상세 화면이 활성화된 경우
+    if (activeTab === 'challenge-detail' && selectedChallenge) {
+      return (
+        <ChallengeDetailSection
+          challengeId={selectedChallenge.id}
+          challengeTitle={selectedChallenge.title}
+          onCertifyTask={handleCertifyTask}
+        />
+      );
+    }
+
     // 챌린지 탭이 활성화된 경우
     if (activeTab === 'challenge' && challengesData?.challenges) {
       return (
@@ -127,6 +175,7 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
           title="모든 챌린지"
           challenges={challengesData.challenges}
           emptyMessage="챌린지가 없습니다."
+          onChallengePress={handleChallengePress}
         />
       );
     }
@@ -183,16 +232,37 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
 
       {/* 탭 버튼 */}
       <TagRow paddingHorizontal="$4">
-        <Tag
-          label="채팅"
-          active={activeTab === 'chat'}
-          onPress={() => handleTabPress('chat')}
-        />
-        <Tag
-          label="챌린지"
-          active={activeTab === 'challenge'}
-          onPress={() => handleTabPress('challenge')}
-        />
+        {activeTab !== 'challenge-detail' ? (
+          // 기본 태그 (챌린지 상세가 아닌 경우)
+          <>
+            <Tag
+              label="채팅"
+              active={activeTab === 'chat'}
+              onPress={() => handleTabPress('chat')}
+            />
+            <Tag
+              label="챌린지"
+              active={activeTab === 'challenge'}
+              onPress={() => handleTabPress('challenge')}
+            />
+          </>
+        ) : (
+          // 챌린지 상세 태그
+          <>
+            <Tag
+              label="챌린지"
+              active={true}
+              onPress={() => handleTabPress('challenge')}
+            />
+            {selectedChallenge && (
+              <Tag
+                label={selectedChallenge.title}
+                active={false}
+                onPress={() => handleTabPress('challenge')}
+              />
+            )}
+          </>
+        )}
       </TagRow>
 
       <ScrollView flex={1} padding="$4">

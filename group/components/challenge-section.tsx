@@ -7,6 +7,7 @@ interface ChallengeSectionProps {
   description?: string;
   challenges: GroupChallengeListItem[];
   emptyMessage?: string;
+  onChallengePress?: (challenge: GroupChallengeListItem) => void;
 }
 
 export function ChallengeSection({
@@ -14,11 +15,16 @@ export function ChallengeSection({
   description,
   challenges,
   emptyMessage = '챌린지가 없습니다.',
+  onChallengePress,
 }: ChallengeSectionProps) {
   const handleChallengePress = (challenge: GroupChallengeListItem) => {
-    // 챌린지 상세 페이지로 이동 (현재는 구현되지 않음)
-    console.log(`챌린지 상세 페이지로 이동: ${challenge.id}`);
-    // TODO: 챌린지 상세 페이지 구현 후 라우팅 추가
+    if (onChallengePress) {
+      onChallengePress(challenge);
+    } else {
+      // 콜백이 제공되지 않은 경우 기본 동작
+      console.log(`챌린지 상세 페이지로 이동: ${challenge.id}`);
+      // TODO: 챌린지 상세 페이지 구현 후 라우팅 추가
+    }
   };
 
   // 날짜 포맷팅 함수
