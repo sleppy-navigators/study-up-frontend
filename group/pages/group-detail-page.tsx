@@ -14,6 +14,7 @@ import { ChallengeSection } from '@/group/components/challenge-section';
 import { InvitationBottomSheet } from '@/group/components/invitation-bottom-sheet';
 import { Tag } from '@/app/components/Tag';
 import { TagRow } from '@/app/components/TagRow';
+import { ChallengeDetailSection } from '@/challenge/components/challenge-detail-section';
 
 // Tab 상태를 나타내는 타입
 type TabState = 'none' | 'chat' | 'challenge' | 'challenge-detail';
@@ -90,6 +91,15 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
     setActiveTab('challenge-detail');
   };
 
+  // 테스크 인증 핸들러
+  const handleCertifyTask = (taskId: number) => {
+    // 현재는 콘솔에 로그만 출력
+    console.log(`테스크 ${taskId} 인증을 위한 화면으로 이동 또는 모달 표시`);
+
+    // 추후 인증 페이지로 이동하거나 인증 모달을 표시하는 코드 추가
+    // router.push(`/challenge/${selectedChallenge?.id}/tasks/${taskId}/certify`);
+  };
+
   // 헤더 액션 버튼 설정
   const headerActions = [
     createChallengeAction(handleAddChallenge),
@@ -150,10 +160,11 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
     // 챌린지 상세 화면이 활성화된 경우
     if (activeTab === 'challenge-detail' && selectedChallenge) {
       return (
-        <Text>
-          챌린지 상세 화면 (아직 구현되지 않음): {selectedChallenge.title}
-        </Text>
-        // 다음 단계에서 실제 챌린지 상세 컴포넌트를 구현할 예정입니다
+        <ChallengeDetailSection
+          challengeId={selectedChallenge.id}
+          challengeTitle={selectedChallenge.title}
+          onCertifyTask={handleCertifyTask}
+        />
       );
     }
 
