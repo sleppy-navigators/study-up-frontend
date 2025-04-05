@@ -5,6 +5,7 @@ import {
   Header,
   createInviteAction,
   createSearchAction,
+  createChallengeAction,
 } from '@/base/components/header';
 import { useGroupChallengesQuery, useGroupTasksQuery } from '@/group/api';
 import { TaskSection } from '@/group/components/task-section';
@@ -40,8 +41,15 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
     setShowInvitation(true);
   };
 
+  // 챌린지 추가 핸들러
+  const handleAddChallenge = () => {
+    // Use href to navigate
+    router.push(('/challenge/create?groupId=' + groupId) as any);
+  };
+
   // 헤더 액션 버튼 설정
   const headerActions = [
+    createChallengeAction(handleAddChallenge),
     createSearchAction(handleSearch),
     createInviteAction(handleInvite),
   ];
