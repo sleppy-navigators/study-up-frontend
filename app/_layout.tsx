@@ -1,4 +1,4 @@
-import { Slot, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { QueryProvider } from '@/lib/react-query';
@@ -12,8 +12,6 @@ import {
 import { Header } from '@/base/components/header';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { TamaguiProvider } from 'tamagui';
-import GlobalLoadingFallback from '@/base/providers/global-loading-fallback';
-import AuthGuardProvider from '@/auth/providers/AuthGuardProvider';
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
