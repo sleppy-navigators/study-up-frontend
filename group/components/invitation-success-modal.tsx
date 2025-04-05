@@ -71,50 +71,16 @@ export function InvitationSuccessModal({
     </YStack>
   );
 
-  if (isMobile) {
-    return (
-      <Sheet
-        open={open}
-        onOpenChange={onOpenChange}
-        snapPoints={[40]}
-        dismissOnSnapToBottom>
-        <Sheet.Frame>
-          <Sheet.Handle />
-          {ModalContent}
-        </Sheet.Frame>
-      </Sheet>
-    );
-  }
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Overlay
-          key="overlay"
-          animation="quick"
-          opacity={0.5}
-          enterStyle={{ opacity: 0 }}
-          exitStyle={{ opacity: 0 }}
-        />
-        <Dialog.Content
-          bordered
-          elevate
-          key="content"
-          animation={[
-            'quick',
-            {
-              opacity: {
-                overshootClamping: true,
-              },
-            },
-          ]}
-          enterStyle={{ x: 0, y: -20, opacity: 0, scale: 0.9 }}
-          exitStyle={{ x: 0, y: 10, opacity: 0, scale: 0.95 }}
-          width={350}
-          maxWidth="95%">
-          {ModalContent}
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog>
+    <Sheet
+      open={open}
+      onOpenChange={onOpenChange}
+      snapPoints={[40]}
+      dismissOnSnapToBottom>
+      <Sheet.Frame>
+        <Sheet.Handle />
+        {ModalContent}
+      </Sheet.Frame>
+    </Sheet>
   );
 }
