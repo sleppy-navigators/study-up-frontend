@@ -1,12 +1,15 @@
 import React from 'react';
 import { Button, Spinner, Text, YStack } from 'tamagui';
 import { SuspenseProvider } from '@/components/SuspenseProvider';
-import { router } from 'expo-router';
+import { Route, router, useLocalSearchParams } from 'expo-router';
 import { useSignInMutation } from '@/auth/api';
 
 function Index() {
+  const { redirectTo } = useLocalSearchParams();
   const { mutate, isPending } = useSignInMutation({
-    onSignIn: () => router.replace('/'),
+    onSignIn: () => {
+      router.replace((redirectTo as Route) || '/');
+    },
   });
 
   const handlePress = () => {
