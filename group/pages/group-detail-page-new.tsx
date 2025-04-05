@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ScrollView, Spinner, YStack } from 'tamagui';
+import { ScrollView, Spinner, Text, YStack } from 'tamagui';
 import { useRouter } from 'expo-router';
 import {
   Header,
@@ -11,6 +11,11 @@ import { useGroupChallengesQuery, useGroupTasksQuery } from '@/group/api';
 import { TaskSection } from '@/group/components/task-section';
 import { ChallengeSection } from '@/group/components/challenge-section';
 import { InvitationBottomSheet } from '@/group/components/invitation-bottom-sheet';
+import { Tag } from '@/app/components/Tag';
+import { TagRow } from '@/app/components/TagRow';
+
+// Tab 상태를 나타내는 타입
+type TabState = 'none' | 'chat' | 'challenge';
 
 interface GroupDetailPageProps {
   groupId: number;
@@ -20,6 +25,7 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
   const router = useRouter();
   const [showSearch, setShowSearch] = useState(false);
   const [showInvitation, setShowInvitation] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabState>('none');
 
   const { data: challengesData, isLoading: isLoadingChallenges } =
     useGroupChallengesQuery(groupId);
@@ -45,6 +51,16 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
   const handleAddChallenge = () => {
     // Use href to navigate
     router.push(('/challenge/create?groupId=' + groupId) as any);
+  };
+
+  // 탭 선택 핸들러
+  const handleTabPress = (tab: TabState) => {
+    // 같은 탭을 다시 클릭하면 기본 상태로 돌아감
+    if (activeTab === tab) {
+      setActiveTab('none');
+    } else {
+      setActiveTab(tab);
+    }
   };
 
   // 헤더 액션 버튼 설정
@@ -102,37 +118,85 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
   const upcomingTasks = getUpcomingTasks();
   const recentCertifiedTasks = getRecentCertifiedTasks();
 
+  // 콘텐츠 렌더링 함수
+  const renderContent = () => {
+    // 챌린지 탭이 활성화된 경우
+    if (activeTab === 'challenge' && challengesData?.challenges) {
+      return (
+        <ChallengeSection
+          title="모든 챌린지"
+          challenges={challengesData.challenges}
+          emptyMessage="챌린지가 없습니다."
+        />
+      );
+    }
+
+    // 채팅 탭이 활성화된 경우
+    if (activeTab === 'chat') {
+      return (
+        <YStack
+          flex={1}
+          justifyContent="center"
+          alignItems="center"
+          paddingVertical="$10">
+          <Text color="$gray9" textAlign="center">
+            기능 준비 중입니다
+          </Text>
+        </YStack>
+      );
+    }
+
+    // 기본 상태 (탭이 선택되지 않은 경우)
+    return (
+      <YStack space="$6">
+        {/* 마감이 임박한 태스크 섹션 */}
+        <TaskSection
+          title="마감이 임박한 태스크"
+          description="3일 이내에 마감되는 태스크입니다."
+          tasks={upcomingTasks}
+          emptyMessage="마감이 임박한 태스크가 없습니다."
+        />
+
+        {/* 최근 인증된 태스크 섹션 */}
+        <TaskSection
+          title="최근 인증된 태스크"
+          description="최근에 인증된 태스크입니다."
+          tasks={recentCertifiedTasks}
+          emptyMessage="최근 인증된 태스크가 없습니다."
+        />
+
+        {/* 검색이 활성화된 경우에만 모든 챌린지 섹션 표시 */}
+        {showSearch && challengesData?.challenges && (
+          <ChallengeSection
+            title="모든 챌린지"
+            challenges={challengesData.challenges}
+            emptyMessage="챌린지가 없습니다."
+          />
+        )}
+      </YStack>
+    );
+  };
+
   return (
     <YStack flex={1} backgroundColor="$background">
       <Header title="그룹 상세" onBack={handleBack} actions={headerActions} />
 
+      {/* 탭 버튼 */}
+      <TagRow paddingHorizontal="$4">
+        <Tag
+          label="채팅"
+          active={activeTab === 'chat'}
+          onPress={() => handleTabPress('chat')}
+        />
+        <Tag
+          label="챌린지"
+          active={activeTab === 'challenge'}
+          onPress={() => handleTabPress('challenge')}
+        />
+      </TagRow>
+
       <ScrollView flex={1} padding="$4">
-        <YStack space="$6">
-          {/* 마감이 임박한 태스크 섹션 */}
-          <TaskSection
-            title="마감이 임박한 태스크"
-            description="3일 이내에 마감되는 태스크입니다."
-            tasks={upcomingTasks}
-            emptyMessage="마감이 임박한 태스크가 없습니다."
-          />
-
-          {/* 최근 인증된 태스크 섹션 */}
-          <TaskSection
-            title="최근 인증된 태스크"
-            description="최근에 인증된 태스크입니다."
-            tasks={recentCertifiedTasks}
-            emptyMessage="최근 인증된 태스크가 없습니다."
-          />
-
-          {/* 모든 챌린지 섹션 */}
-          {showSearch && challengesData?.challenges && (
-            <ChallengeSection
-              title="모든 챌린지"
-              challenges={challengesData.challenges}
-              emptyMessage="챌린지가 없습니다."
-            />
-          )}
-        </YStack>
+        {renderContent()}
       </ScrollView>
 
       {/* 초대 바텀시트 */}
