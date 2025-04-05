@@ -11,7 +11,7 @@ export function QueryProvider({ children }: QueryProviderProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 3,
+        retry: false,
         refetchOnReconnect: true,
       },
       mutations: {
