@@ -13,9 +13,10 @@ import {
 import { useRouter } from 'expo-router';
 import { ArrowLeft } from '@tamagui/lucide-icons';
 import * as ImagePicker from 'expo-image-picker';
-import { Platform, ActivityIndicator } from 'react-native';
+import { ActivityIndicator } from 'react-native';
 import { useGetPreSignedUploadUrl } from '../../media/api';
 import { useCompleteTask } from '../../challenge/api';
+import ky from 'ky';
 
 interface CertificationPageProps {
   challengeId: string;
@@ -93,28 +94,31 @@ export function CertificationPage({
       // Generate a unique filename
       const filename = `task-certification-${Date.now()}.jpg`;
 
-      // Get pre-signed URL
+      // Get pre-signed URL using mutation
       const uploadUrlData = await getUploadUrl.mutateAsync(filename);
 
-      // Upload image to pre-signed URL
-      const response = await fetch(uploadUrlData.uploadUrl, {
-        method: 'PUT',
-        body: await fetchImageData(image),
-        headers: {
-          'Content-Type': 'image/jpeg',
-        },
-      });
+      if (!uploadUrlData) {
+        throw new Error('URL 발급에 실패했습니다.');
+      }
 
-      if (!response.ok) {
+      // Upload image to pre-signed URL using ky
+      try {
+        await ky.put(uploadUrlData.url, {
+          body: await fetchImageData(image),
+          headers: {
+            'Content-Type': 'image/jpeg',
+          },
+        });
+      } catch (_uploadError) {
         throw new Error('이미지 업로드에 실패했습니다.');
       }
 
-      // Complete task with image URL
+      // Complete task with image URL using mutation
       await completeTask.mutateAsync({
         challengeId: Number(challengeId),
         taskId: Number(taskId),
         data: {
-          imageUrls: [uploadUrlData.fileUrl],
+          imageUrls: [uploadUrlData.url],
           externalLinks: [],
         },
       });
@@ -134,13 +138,8 @@ export function CertificationPage({
 
   // Helper function to fetch image data
   const fetchImageData = async (uri: string) => {
-    if (Platform.OS === 'web') {
-      const response = await fetch(uri);
-      return await response.blob();
-    } else {
-      const response = await fetch(uri);
-      return await response.blob();
-    }
+    const response = await ky.get(uri);
+    return await response.blob();
   };
 
   // Submit link handler
@@ -151,7 +150,7 @@ export function CertificationPage({
     setErrorMessage(null);
 
     try {
-      // Complete task with external link
+      // Complete task with external link using mutation
       await completeTask.mutateAsync({
         challengeId: Number(challengeId),
         taskId: Number(taskId),
@@ -197,7 +196,7 @@ export function CertificationPage({
               <XStack space="$4">
                 <Button
                   size="$4"
-                  theme="gray"
+                  theme="alt2"
                   onPress={() => setImage(null)}
                   disabled={isUploading}>
                   다시 찍기
@@ -233,7 +232,7 @@ export function CertificationPage({
               </Button>
               <Button
                 size="$4"
-                theme="gray"
+                theme="alt2"
                 onPress={() => setCertificationMethod(null)}
                 disabled={isUploading}>
                 뒤로 가기
@@ -261,7 +260,7 @@ export function CertificationPage({
           />
           <XStack space="$4" justifyContent="center">
             <Button
-              theme="gray"
+              theme="alt2"
               onPress={() => setCertificationMethod(null)}
               disabled={isUploading}>
               뒤로 가기
