@@ -12,8 +12,8 @@
     "lint": "expo lint",
     "lint-fix": "eslint . --fix",
     "format": "prettier --write .",
-    "test-deeplink": "adb shell am start -W -a android.intent.action.VIEW -d \"com.sleppynavigators.studyup://invitations/11?invitationKey=5a35ee44-70e1-4fec-b2d9-516df5705b2b\" com.sleppynavigators.studyup",
-    "test-deeplink:dev": "adb shell am start -W -a android.intent.action.VIEW -d \"exp+studyup://invitations/11?invitationKey=5a35ee44-70e1-4fec-b2d9-516df5705b2b\" com.sleppynavigators.studyup"
+    "test-deeplink": "adb shell am start -W -a android.intent.action.VIEW -d \"com.sleppynavigators.studyup://invitations/1?invitationKey=1dbf550e-8d74-4b6a-831b-879f0ca1b514\" com.sleppynavigators.studyup",
+    "test-deeplink:dev": "adb shell am start -W -a android.intent.action.VIEW -d \"exp+studyup://invitations/1?invitationKey=1dbf550e-8d74-4b6a-831b-879f0ca1b514\" com.sleppynavigators.studyup"
   },
   "jest": {
     "preset": "jest-expo"
