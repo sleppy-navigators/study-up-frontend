@@ -11,10 +11,12 @@ export function QueryProvider({ children }: QueryProviderProps) {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: Infinity,
-        gcTime: 1000 * 60 * 60 * 24, // 24 hours
-        retry: 3,
+        retry: false,
         refetchOnReconnect: true,
+      },
+      mutations: {
+        retry: false,
+        throwOnError: true,
       },
     },
   });

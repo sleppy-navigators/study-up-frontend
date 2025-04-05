@@ -13,6 +13,7 @@ export interface ListItemProps {
   };
   leftContent?: React.ReactNode;
   renderContent?: (props: ListItemProps) => React.ReactNode; // 커스텀 렌더링을 위한 prop
+  onPress?: () => void; // 아이템 클릭 이벤트
 }
 
 export function ListItem({
@@ -23,6 +24,7 @@ export function ListItem({
   actionButton,
   leftContent,
   renderContent,
+  onPress,
   ...props
 }: ListItemProps) {
   if (renderContent) {
@@ -33,18 +35,31 @@ export function ListItem({
       rightContent,
       actionButton,
       leftContent,
+      onPress,
       ...props,
     });
   }
 
   return (
-    <XStack padding="$3" alignItems="center" gap="$3">
+    <XStack
+      padding="$3"
+      alignItems="center"
+      gap="$3"
+      onPress={onPress}
+      pressStyle={{ opacity: 0.8 }}
+      cursor={onPress ? 'pointer' : 'default'}>
       {leftContent}
 
-      {imageUrl && (
+      {imageUrl ? (
         <Avatar circular size="$4">
           <Avatar.Image src={imageUrl} />
           <Avatar.Fallback backgroundColor="$gray5" />
+        </Avatar>
+      ) : (
+        <Avatar circular size="$4">
+          <Avatar.Fallback backgroundColor="$gray5">
+            <Text>{title.charAt(0).toUpperCase()}</Text>
+          </Avatar.Fallback>
         </Avatar>
       )}
 
@@ -56,7 +71,7 @@ export function ListItem({
       </YStack>
 
       {rightContent && (
-        <Text color="$gray9" size="$2">
+        <Text color="$gray9" fontSize="$2">
           {rightContent}
         </Text>
       )}

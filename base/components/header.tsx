@@ -1,19 +1,26 @@
 import type React from 'react';
-import { ArrowLeft, Plus } from '@tamagui/lucide-icons';
+import { ArrowLeft, Plus, Search, UserPlus } from '@tamagui/lucide-icons';
 import { Button, H2, Paragraph, XStack, YStack } from 'tamagui';
 import { usePathname, useRouter } from 'expo-router';
+
+export interface HeaderAction {
+  icon: React.ReactNode;
+  onPress: () => void;
+  accessibilityLabel?: string;
+}
 
 export interface HeaderProps {
   title?: string;
   onBack?: () => void;
   onAdd?: () => void;
+  actions?: HeaderAction[];
   children?: React.ReactNode;
 }
 
 // 라우트별 헤더 설정
 const ROUTE_HEADERS: Record<
   string,
-  Omit<HeaderProps, 'onBack' | 'onAdd'> & {
+  Omit<HeaderProps, 'onBack' | 'onAdd' | 'actions'> & {
     showBackButton?: boolean;
     showAddButton?: boolean;
   }
@@ -49,7 +56,7 @@ export function Header(props: HeaderProps) {
   const handleAdd =
     props.onAdd ||
     (routeConfig.showAddButton
-      ? () => console.log(`Add pressed on ${pathname}`)
+      ? () => router.push('/group/create')
       : undefined);
 
   return (
@@ -70,15 +77,29 @@ export function Header(props: HeaderProps) {
           <H2>{title}</H2>
         </XStack>
 
-        {handleAdd && (
-          <Button
-            size="$3"
-            circular
-            backgroundColor="$yellow9"
-            onPress={handleAdd}>
-            <Plus size="$1.5" color="$color" />
-          </Button>
-        )}
+        <XStack gap="$2">
+          {props.actions?.map((action, index) => (
+            <Button
+              key={index}
+              size="$3"
+              circular
+              backgroundColor="$yellow9"
+              onPress={action.onPress}
+              accessibilityLabel={action.accessibilityLabel}>
+              {action.icon}
+            </Button>
+          ))}
+
+          {handleAdd && !props.actions && (
+            <Button
+              size="$3"
+              circular
+              backgroundColor="$yellow9"
+              onPress={handleAdd}>
+              <Plus size="$1.5" color="$color" />
+            </Button>
+          )}
+        </XStack>
       </XStack>
 
       {children && (
@@ -89,3 +110,16 @@ export function Header(props: HeaderProps) {
     </YStack>
   );
 }
+
+// 편의를 위한 헤더 액션 생성 함수들
+export const createSearchAction = (onPress: () => void): HeaderAction => ({
+  icon: <Search size="$1.5" color="$color" />,
+  onPress,
+  accessibilityLabel: '검색',
+});
+
+export const createInviteAction = (onPress: () => void): HeaderAction => ({
+  icon: <UserPlus size="$1.5" color="$color" />,
+  onPress,
+  accessibilityLabel: '초대',
+});

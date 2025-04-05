@@ -1,35 +1,35 @@
 import * as SecureStore from 'expo-secure-store';
-
-interface Tokens {
-  accessToken: string;
-  refreshToken: string;
-}
-
-const TOKEN_KEY = 'auth_tokens';
+import { PersistStorage, StorageValue } from 'zustand/middleware';
 
 const secureStoreOptions: SecureStore.SecureStoreOptions = {
-  requireAuthentication: false, // 생체인증이 필요한 경우 true로 설정
+  requireAuthentication: false,
   keychainAccessible: SecureStore.WHEN_UNLOCKED,
 };
 
+interface StorageStateType {
+  accessToken: string | null;
+  refreshToken: string | null;
+}
+
 export const tokenStorage = {
-  async save(tokens: Tokens) {
+  async getItem(name: string): Promise<StorageValue<StorageStateType> | null> {
+    const value = await SecureStore.getItemAsync(name, secureStoreOptions);
+    if (!value) return null;
+    return JSON.parse(value) as StorageValue<StorageStateType>;
+  },
+
+  async setItem(
+    name: string,
+    value: StorageValue<StorageStateType>
+  ): Promise<void> {
     await SecureStore.setItemAsync(
-      TOKEN_KEY,
-      JSON.stringify(tokens),
+      name,
+      JSON.stringify(value),
       secureStoreOptions
     );
   },
 
-  async get(): Promise<Tokens | null> {
-    const tokens = await SecureStore.getItemAsync(
-      TOKEN_KEY,
-      secureStoreOptions
-    );
-    return tokens ? JSON.parse(tokens) : null;
+  async removeItem(name: string): Promise<void> {
+    await SecureStore.deleteItemAsync(name, secureStoreOptions);
   },
-
-  async clear() {
-    await SecureStore.deleteItemAsync(TOKEN_KEY, secureStoreOptions);
-  },
-};
+} satisfies PersistStorage<StorageStateType>;

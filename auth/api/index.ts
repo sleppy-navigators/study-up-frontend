@@ -9,6 +9,8 @@ import {
   SignInRequest,
   TokenResponse,
 } from './types';
+import { signInWithGoogle } from '@/lib/firebase';
+import { useAuthStore } from '../stores/authStore';
 
 /**
  * Auth API 함수
@@ -47,9 +49,20 @@ export const authApi = {
 /**
  * 로그인 훅
  */
-export function useSignInUser() {
+export function useSignInMutation(options?: { onSignIn: () => void }) {
+  const login = useAuthStore((state) => state.login);
   return useMutation<TokenResponse, Error, SignInParams>({
-    mutationFn: ({ provider, idToken }) => authApi.signIn(provider, idToken),
+    mutationFn: async ({ provider }) => {
+      if (provider === 'GOOGLE') {
+        const idToken = await signInWithGoogle();
+        return authApi.signIn(provider, idToken);
+      }
+      throw new Error('Invalid provider');
+    },
+    onSuccess: async (data) => {
+      await login(data);
+      options?.onSignIn?.();
+    },
   });
 }
 

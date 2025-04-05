@@ -9,11 +9,12 @@ import {
   Spinner,
   H2,
   Paragraph,
+  TextArea,
 } from 'tamagui';
 import { Users } from '@tamagui/lucide-icons';
 
 export interface CreateGroupFormProps {
-  onSubmit: (groupName: string) => void;
+  onSubmit: (groupName: string, description: string) => void;
   isLoading?: boolean;
 }
 
@@ -28,6 +29,7 @@ export function CreateGroupForm({
   isLoading = false,
 }: CreateGroupFormProps) {
   const [groupName, setGroupName] = useState('');
+  const [description, setDescription] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
@@ -40,8 +42,8 @@ export function CreateGroupForm({
     // Clear any previous errors
     setError(null);
 
-    // Call the onSubmit callback with the group name
-    onSubmit(groupName);
+    // Call the onSubmit callback with the group name and description
+    onSubmit(groupName, description);
   };
 
   return (
@@ -61,32 +63,52 @@ export function CreateGroupForm({
             새 그룹 만들기
           </H2>
           <Paragraph textAlign="center" theme="alt2" mb="$2">
-            함께 공부할 그룹의 이름을 입력하세요
+            함께 공부할 그룹의 정보를 입력하세요
           </Paragraph>
         </YStack>
 
-        <YStack space="$2">
-          <Input
-            size="$4"
-            placeholder="예: 알고리즘 스터디"
-            value={groupName}
-            onChangeText={setGroupName}
-            autoFocus
-            disabled={isLoading}
-            borderWidth={error ? 1 : 0}
-            borderColor={error ? '$red8' : 'transparent'}
-            backgroundColor="$gray2"
-            focusStyle={{
-              backgroundColor: '$gray1',
-              borderWidth: 0,
-            }}
-          />
+        <YStack space="$4">
+          <YStack space="$2">
+            <Text fontWeight="bold">그룹 이름</Text>
+            <Input
+              size="$4"
+              placeholder="예: 알고리즘 스터디"
+              value={groupName}
+              onChangeText={setGroupName}
+              autoFocus
+              disabled={isLoading}
+              borderWidth={error ? 1 : 0}
+              borderColor={error ? '$red8' : 'transparent'}
+              backgroundColor="$gray2"
+              focusStyle={{
+                backgroundColor: '$gray1',
+                borderWidth: 0,
+              }}
+            />
 
-          {error && (
-            <Text color="$red10" fontSize="$3" ml="$1" mt="$1">
-              {error}
-            </Text>
-          )}
+            {error && (
+              <Text color="$red10" fontSize="$3" ml="$1">
+                {error}
+              </Text>
+            )}
+          </YStack>
+
+          <YStack space="$2">
+            <Text fontWeight="bold">그룹 설명 (선택사항)</Text>
+            <TextArea
+              size="$4"
+              placeholder="그룹에 대한 설명을 입력하세요"
+              value={description}
+              onChangeText={setDescription}
+              disabled={isLoading}
+              backgroundColor="$gray2"
+              focusStyle={{
+                backgroundColor: '$gray1',
+                borderWidth: 0,
+              }}
+              minHeight={100}
+            />
+          </YStack>
         </YStack>
 
         <Button
@@ -97,7 +119,8 @@ export function CreateGroupForm({
           borderRadius="$4"
           height="$6"
           pressStyle={{ opacity: 0.9 }}
-          mt="$2">
+          mt="$2"
+          backgroundColor="$yellow9">
           {isLoading ? (
             <XStack space="$2" alignItems="center">
               <Spinner size="small" color="$color" />

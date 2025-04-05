@@ -1,7 +1,5 @@
 import ky, { HTTPError, KyResponse, NormalizedOptions, KyRequest } from 'ky';
-import { match, P } from 'ts-pattern';
-import { createStore } from 'jotai/vanilla';
-import { authActions, authAtom } from '../auth/store';
+import { match } from 'ts-pattern';
 import {
   UnauthorizedError,
   ForbiddenError,
@@ -11,39 +9,9 @@ import {
   ValidationError,
   ServerError,
   ServiceUnavailableError,
-  NetworkError,
-  TimeoutError,
 } from '../errors/http';
-
-const store = createStore();
-
-let refreshPromise: Promise<void> | null = null;
-const requestQueue: (() => Promise<any>)[] = [];
-
-const addToQueue = (request: () => Promise<any>) => {
-  return new Promise((resolve, reject) => {
-    requestQueue.push(() => request().then(resolve).catch(reject));
-  });
-};
-
-const executeQueue = () => {
-  const queue = [...requestQueue];
-  requestQueue.length = 0;
-
-  queue.forEach((request) => {
-    request();
-  });
-};
-
-const clearQueue = () => {
-  const queue = [...requestQueue];
-  requestQueue.length = 0;
-
-  queue.forEach((request) => {
-    // Ignore all the requests in the queue
-    request().catch(() => {});
-  });
-};
+import { authService } from '@/auth/services/auth';
+import { authApi } from '@/auth/api';
 
 const handleTokenRefresh = async (
   request: KyRequest,
@@ -54,61 +22,31 @@ const handleTokenRefresh = async (
     return response;
   }
 
-  if (refreshPromise !== null) {
-    return addToQueue(() => client(request)) as Promise<KyResponse>;
+  const { accessToken, refreshToken } = authService.getTokens();
+
+  if (!accessToken || !refreshToken) {
+    authService.logout();
+    throw new UnauthorizedError(response, request, options);
   }
 
   try {
-    const { accessToken, refreshToken } = store.get(authAtom);
-    if (!refreshToken) throw new UnauthorizedError(response, request, options);
+    const { accessToken: newAccessToken, refreshToken: newRefreshToken } =
+      await authApi.refreshToken(accessToken, refreshToken);
 
-    refreshPromise = ky
-      .post('auth/refresh', {
-        prefixUrl: 'http://localhost:8080',
-        json: {
-          accessToken,
-          refreshToken,
-        },
-      })
-      .json<{
-        apiResult: string;
-        data: {
-          accessToken: string;
-          refreshToken: string;
-        };
-      }>()
-      .then(async (response) => {
-        await store.set(authActions.setTokens, response.data);
-      })
-      .catch(() => {
-        throw new UnauthorizedError(response, request, options);
-      });
-
-    await refreshPromise;
-    executeQueue();
-    return client(request);
+    authService.login({
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken,
+    });
   } catch (error) {
-    clearQueue();
-    await store.set(authActions.clearTokens);
-    throw error;
-  } finally {
-    refreshPromise = null;
+    authService.logout();
+    throw new UnauthorizedError(response, request, options);
   }
+
+  return client(request);
 };
 
-const handleError = async (error: HTTPError): Promise<HTTPError> => {
-  const response = error.response;
-  const request = error.request;
-  const options = error.options;
-
-  if (error instanceof TypeError) {
-    if (error.message === 'Failed to fetch') {
-      throw new NetworkError();
-    }
-    if (error.message.includes('timeout')) {
-      throw new TimeoutError();
-    }
-  }
+const handleHttpError = async (error: HTTPError): Promise<HTTPError> => {
+  const { request, response, options } = error;
 
   throw match(response.status)
     .with(401, () => new UnauthorizedError(response, request, options))
@@ -118,31 +56,28 @@ const handleError = async (error: HTTPError): Promise<HTTPError> => {
     .with(400, () => new BadRequestError(response, request, options))
     .with(422, () => new ValidationError(response, request, options))
     .with(503, () => new ServiceUnavailableError(response, request, options))
-    .with(
-      P.number.between(500, 599),
-      () => new ServerError(response, request, options)
-    )
     .otherwise(() => new ServerError(response, request, options));
+};
+
+const AUTH_HEADER = 'Authorization';
+const BEARER_PREFIX = 'Bearer ';
+
+const setAuthorizationHeader = (request: KyRequest) => {
+  const { accessToken } = authService.getTokens();
+  if (accessToken) {
+    request.headers.set(AUTH_HEADER, `${BEARER_PREFIX}${accessToken}`);
+  }
 };
 
 export const client = ky.create({
   prefixUrl: process.env.EXPO_PUBLIC_API_URL,
   hooks: {
-    beforeRequest: [
-      async (request) => {
-        const { accessToken } = store.get(authAtom);
-        if (accessToken) {
-          request.headers.set('Authorization', `Bearer ${accessToken}`);
-        }
-      },
-    ],
+    beforeRequest: [setAuthorizationHeader],
     afterResponse: [handleTokenRefresh],
-    beforeError: [handleError],
+    beforeError: [handleHttpError],
   },
   retry: {
-    limit: 2,
     methods: ['get', 'put'],
     statusCodes: [408, 500, 502, 503, 504],
-    delay: (attemptCount: number) => Math.min(1000 * 2 ** attemptCount, 10000),
   },
 });

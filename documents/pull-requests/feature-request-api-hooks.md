@@ -52,7 +52,7 @@
 
 - [ ] Auth Query/Mutation Hooks
 
-  - [ ] `useSignInUser()`
+  - [ ] `useSignInMutation()`
   - [ ] `useRefreshToken()`
 
 - [ ] User Query Hooks

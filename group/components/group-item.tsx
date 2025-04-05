@@ -1,9 +1,21 @@
 import { ListItem, type ListItemProps } from '@/base/components/list-item';
+import { useRouter } from 'expo-router';
 
 export interface GroupItemProps extends Omit<ListItemProps, 'actionButton'> {
-  timestamp: string;
+  id: number;
+  onPress?: () => void;
 }
 
-export function GroupItem({ timestamp, ...props }: GroupItemProps) {
-  return <ListItem {...props} rightContent={timestamp} />;
+export function GroupItem({ id, onPress, ...props }: GroupItemProps) {
+  const router = useRouter();
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress();
+    } else {
+      router.push(`/group/detail/${id}`);
+    }
+  };
+
+  return <ListItem {...props} onPress={handlePress} />;
 }
