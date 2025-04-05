@@ -1,5 +1,5 @@
 import ky, { HTTPError, KyResponse, NormalizedOptions, KyRequest } from 'ky';
-import { match, P } from 'ts-pattern';
+import { match } from 'ts-pattern';
 import {
   UnauthorizedError,
   ForbiddenError,
