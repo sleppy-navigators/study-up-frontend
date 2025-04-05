@@ -1,5 +1,11 @@
 import type React from 'react';
-import { ArrowLeft, Plus, Search, UserPlus } from '@tamagui/lucide-icons';
+import {
+  ArrowLeft,
+  Plus,
+  Search,
+  UserPlus,
+  TrendingUp,
+} from '@tamagui/lucide-icons';
 import { Button, H2, Paragraph, XStack, YStack } from 'tamagui';
 import { usePathname, useRouter } from 'expo-router';
 
@@ -122,4 +128,10 @@ export const createInviteAction = (onPress: () => void): HeaderAction => ({
   icon: <UserPlus size="$1.5" color="$color" />,
   onPress,
   accessibilityLabel: '초대',
+});
+
+export const createChallengeAction = (onPress: () => void): HeaderAction => ({
+  icon: <TrendingUp size="$1.5" color="$color" />,
+  onPress,
+  accessibilityLabel: '챌린지 추가',
 });
