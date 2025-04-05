@@ -66,7 +66,8 @@ export class NotFoundError extends HTTPError {
     this.resetOptions = {
       shouldClearCache: true,
       shouldClearAuth: false,
-      shouldClearNavigation: false,
+      shouldClearNavigation: true,
+      navigationTarget: '/',
     };
   }
 }
