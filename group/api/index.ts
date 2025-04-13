@@ -132,12 +132,12 @@ export const groupApi = {
    * 그룹 초대 조회
    * @param groupId 그룹 ID
    * @param invitationId 초대 ID
-   * @returns 그룹 응답
+   * @returns 그룹 초대 응답
    */
   getInvitation: (groupId: number, invitationId: number) =>
     client
       .get(`groups/${groupId}/invitations/${invitationId}`)
-      .json<SuccessResponse<GroupResponse>>()
+      .json<SuccessResponse<GroupInvitationResponse>>()
       .then((res) => res.data),
 };
 
