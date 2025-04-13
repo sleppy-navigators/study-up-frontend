@@ -35,8 +35,7 @@ export function InvitationBottomSheet({
   // 딥링크 URL 생성
   const generateInvitationUrl = () => {
     if (!inviteUser.data) return '';
-    const { invitationId, invitationKey } = inviteUser.data;
-    return `studyup://invitations/${invitationId}?invitationKey=${invitationKey}`;
+    return `studyup://invitations/${inviteUser.data.id}?invitationKey=${inviteUser.data.invitationKey}`;
   };
 
   // 딥링크 URL 복사
