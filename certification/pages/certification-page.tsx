@@ -101,9 +101,13 @@ export function CertificationPage({
         throw new Error('URL 발급에 실패했습니다.');
       }
 
+      // Extract the base URL (without query parameters) for image access
+      const uploadUrl = uploadUrlData.url; // Full URL with signature for upload
+      const accessUrl = uploadUrl.split('?')[0]; // Base URL for image access
+
       // Upload image to pre-signed URL using ky
       try {
-        await ky.put(uploadUrlData.url, {
+        await ky.put(uploadUrl, {
           body: await fetchImageData(image),
           headers: {
             'Content-Type': 'image/jpeg',
@@ -113,12 +117,12 @@ export function CertificationPage({
         throw new Error('이미지 업로드에 실패했습니다.');
       }
 
-      // Complete task with image URL using mutation
+      // Complete task with the base image URL (without query parameters)
       await completeTask.mutateAsync({
         challengeId: Number(challengeId),
         taskId: Number(taskId),
         data: {
-          imageUrls: [uploadUrlData.url],
+          imageUrls: [accessUrl], // Use the base URL for access
           externalLinks: [],
         },
       });
@@ -138,7 +142,9 @@ export function CertificationPage({
 
   // Helper function to fetch image data
   const fetchImageData = async (uri: string) => {
-    const response = await ky.get(uri);
+    // For local files from camera/gallery, we need to use fetch with file:// URI
+    // ky doesn't handle file:// URIs well
+    const response = await fetch(uri);
     return await response.blob();
   };
 
