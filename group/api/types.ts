@@ -21,8 +21,10 @@ export interface GroupResponse {
 
 // 그룹 초대 응답
 export interface GroupInvitationResponse {
-  invitationId: number;
+  id: number; // invitationId
   invitationKey: string;
+  inviterId: number;
+  groupId: number;
 }
 
 // 그룹 초대 수락 요청
