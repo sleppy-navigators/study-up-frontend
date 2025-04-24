@@ -49,3 +49,6 @@ credentials.json
 
 # ios
 /ios
+
+# storybook
+.storybook/storybook.requires.ts

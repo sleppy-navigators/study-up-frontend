@@ -132,11 +132,22 @@ export const groupApi = {
    * 그룹 초대 조회
    * @param groupId 그룹 ID
    * @param invitationId 초대 ID
-   * @returns 그룹 응답
+   * @returns 그룹 초대 응답
    */
   getInvitation: (groupId: number, invitationId: number) =>
     client
       .get(`groups/${groupId}/invitations/${invitationId}`)
+      .json<SuccessResponse<GroupInvitationResponse>>()
+      .then((res) => res.data),
+
+  /**
+   * 그룹 조회
+   * @param groupId 그룹 ID
+   * @returns 그룹 응답
+   */
+  getGroup: (groupId: number) =>
+    client
+      .get(`groups/${groupId}`)
       .json<SuccessResponse<GroupResponse>>()
       .then((res) => res.data),
 };
@@ -244,5 +255,15 @@ export function useInvitationQuery(groupId: number, invitationId: number) {
   return useSuspenseQuery({
     queryKey: groupKeys.detail(groupId)._ctx.invitation(invitationId).queryKey,
     queryFn: () => groupApi.getInvitation(groupId, invitationId),
+  });
+}
+
+/**
+ * 그룹 조회 훅
+ */
+export function useGroupQuery(groupId: number) {
+  return useSuspenseQuery({
+    queryKey: groupKeys.detail(groupId).queryKey,
+    queryFn: () => groupApi.getGroup(groupId),
   });
 }
