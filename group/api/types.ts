@@ -32,10 +32,18 @@ export interface GroupInvitationAcceptRequest {
   invitationKey: string;
 }
 
-// 그룹 태스크 챌린지 상세 정보
-export interface GroupTaskChallengeDetail {
+// 그룹 태스크 챌린지 상세 정보 (TaskChallengeDTO)
+export interface TaskChallengeDTO {
   challengeId: number;
   challengeTitle: string;
+  isCompleted: boolean;
+}
+
+// 챌린저 상세 정보 (ChallengerDTO)
+export interface ChallengerDTO {
+  challengerId: number;
+  challengerName: string;
+  currentlyJoined: boolean;
 }
 
 // 그룹 태스크 목록 아이템
@@ -44,7 +52,8 @@ export interface GroupTaskListItem {
   title: string;
   deadline: string;
   certification?: TaskCertificationDTO;
-  challenge: GroupTaskChallengeDetail;
+  challengeDetail: TaskChallengeDTO;
+  challengerDetail: ChallengerDTO;
 }
 
 // 그룹 태스크 목록 응답
@@ -58,8 +67,8 @@ export interface GroupChallengeListItem {
   title: string;
   deadline: string;
   description?: string;
-  challengerId: number;
-  challengerName: string;
+  isCompleted: boolean;
+  challengerDetail: ChallengerDTO;
   recentCertification?: TaskCertificationDTO;
 }
 
@@ -72,6 +81,7 @@ export interface GroupChallengeListResponse {
 export interface ChatMessageDto {
   id: string;
   senderId: number;
+  senderType: 'BOT' | 'USER';
   content: string;
   createdAt: string;
 }
@@ -80,6 +90,6 @@ export interface ChatMessageDto {
 export interface ChatMessageListResponse {
   messages: ChatMessageDto[];
   currentPage: number;
-  totalPages: number;
-  totalElements: number;
+  pageCount: number;
+  chatMessageCount: number;
 }

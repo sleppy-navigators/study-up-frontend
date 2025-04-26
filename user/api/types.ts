@@ -8,12 +8,14 @@ import { TaskCertificationDTO } from '../../base/api/types';
 export interface UserTaskChallengeDetail {
   challengeId: number;
   challengeTitle: string;
+  isCompleted: boolean;
 }
 
 // 유저 태스크 그룹 상세 정보
 export interface UserTaskGroupDetail {
   groupId: number;
   groupName: string;
+  currentlyJoined: boolean;
 }
 
 // 유저 태스크 목록 아이템
@@ -36,7 +38,8 @@ export interface GroupListItem {
   id: number;
   name: string;
   thumbnailUrl?: string;
-  lastSystemMessage?: string;
+  numOfMembers: number;
+  lastChatMessage: string;
 }
 
 // 그룹 목록 응답
