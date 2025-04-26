@@ -1,3 +1,4 @@
+import React from 'react';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import {
   Button,
@@ -12,7 +13,11 @@ import {
 } from 'tamagui';
 import { Group, UserCheck, UserX } from '@tamagui/lucide-icons';
 import { useState } from 'react';
-import { useInvitationQuery, useAcceptInvitation } from '@/group/api';
+import {
+  useInvitationQuery,
+  useAcceptInvitation,
+  useGroupQuery,
+} from '@/group/api';
 import { InvitationSuccessModal } from '@/group/components/invitation-success-modal';
 import { Header } from '@/base/components/header';
 
@@ -32,6 +37,9 @@ export default function InvitationView() {
     isLoading,
     isError,
   } = useInvitationQuery(groupId, invitationId);
+
+  // 그룹 정보가 필요하면 별도 조회
+  const { data: groupData } = useGroupQuery(invitationData.groupId);
 
   const { mutate: acceptInvitation, isPending: isAccepting } =
     useAcceptInvitation();
@@ -105,7 +113,7 @@ export default function InvitationView() {
         <YStack alignItems="center" space="$2">
           <H1>그룹 초대</H1>
           <Paragraph textAlign="center">
-            '{invitationData.name}' 그룹에 초대되었습니다.
+            <>'{groupData.name}' 그룹에 초대되었습니다.</>
           </Paragraph>
         </YStack>
 
@@ -114,17 +122,9 @@ export default function InvitationView() {
             <Group size={48} color="$blue10" />
 
             <YStack space="$2" alignItems="center">
-              <H2>{invitationData.name}</H2>
-              {invitationData.description && (
-                <Paragraph textAlign="center">
-                  {invitationData.description}
-                </Paragraph>
-              )}
+              <H2>{groupData.name}</H2>
+              <Paragraph textAlign="center">{groupData.description}</Paragraph>
             </YStack>
-
-            {/* <XStack space="$2" alignItems="center">
-              <Paragraph>멤버 {invitationData.memberCount}명</Paragraph>
-            </XStack> */}
           </YStack>
         </Card>
 
@@ -151,8 +151,8 @@ export default function InvitationView() {
         <InvitationSuccessModal
           open={showSuccessModal}
           onOpenChange={setShowSuccessModal}
-          groupId={groupId.toString()}
-          groupName={invitationData.name}
+          groupId={invitationData.groupId.toString()}
+          groupName={groupData.name}
         />
       </YStack>
     </YStack>
