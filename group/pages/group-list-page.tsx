@@ -17,7 +17,7 @@ export function GroupListPage() {
   const groupItems: GroupItemProps[] = groups.map((group) => ({
     id: group.id,
     title: group.name,
-    description: group.lastSystemMessage || '새로운 그룹입니다.',
+    description: `${group.lastChatMessage || '새로운 그룹입니다.'}`,
     imageUrl: group.thumbnailUrl === 'string' ? '' : group.thumbnailUrl,
   }));
 
