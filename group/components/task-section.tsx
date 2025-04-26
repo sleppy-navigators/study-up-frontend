@@ -17,7 +17,9 @@ export function TaskSection({
 }: TaskSectionProps) {
   const handleTaskPress = (task: GroupTaskListItem) => {
     // 챌린지 상세 페이지로 이동 (현재는 구현되지 않음)
-    console.log(`챌린지 상세 페이지로 이동: ${task.challenge.challengeId}`);
+    console.log(
+      `챌린지 상세 페이지로 이동: ${task.challengeDetail.challengeId}`
+    );
     // TODO: 챌린지 상세 페이지 구현 후 라우팅 추가
   };
 
@@ -87,7 +89,7 @@ export function TaskSection({
                 </XStack>
 
                 <Text fontSize="$3" color="$gray9">
-                  {task.challenge.challengeTitle}
+                  {task.challengeDetail.challengeTitle}
                 </Text>
 
                 {task.certification && (
