@@ -8,6 +8,8 @@ import { BottomNavigation } from '@/base/components/bottom-navigation';
 import { YStack } from 'tamagui';
 import GlobalLoadingFallback from '@/base/providers/global-loading-fallback';
 import AuthGuardProvider from '@/auth/providers/AuthGuardProvider';
+import { Toast } from '@tamagui/toast';
+import { ToastProvider, ToastViewport } from '@tamagui/toast';
 
 export function ErrorBoundary({ error, retry }: ErrorBoundaryProps) {
   const { recoverFromError } = useRecoverFromError();
@@ -31,22 +33,25 @@ export default function Layout() {
   return (
     <GlobalLoadingFallback>
       <AuthGuardProvider>
-        <YStack flex={1} backgroundColor="$background">
-          <YStack flex={1} pb="$6">
-            <Slot />
+        <ToastProvider>
+          <YStack flex={1} backgroundColor="$background">
+            <YStack flex={1} pb="$6">
+              <Slot />
+              <ToastViewport />
+            </YStack>
+            <YStack
+              position="absolute"
+              bottom={0}
+              left={0}
+              right={0}
+              zIndex={100}>
+              <BottomNavigation
+                activeTab={activeTab}
+                onTabChange={setActiveTab}
+              />
+            </YStack>
           </YStack>
-          <YStack
-            position="absolute"
-            bottom={0}
-            left={0}
-            right={0}
-            zIndex={100}>
-            <BottomNavigation
-              activeTab={activeTab}
-              onTabChange={setActiveTab}
-            />
-          </YStack>
-        </YStack>
+        </ToastProvider>
       </AuthGuardProvider>
     </GlobalLoadingFallback>
   );

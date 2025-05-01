@@ -27,12 +27,14 @@ export function CreateGroupPage() {
       },
       {
         onSuccess: (data) => {
+          console.log('그룹 생성 성공:', data);
           toast.show('그룹이 성공적으로 생성되었습니다', {
             type: 'success',
           });
-
+          console.log('toast 표시');
           // 생성된 그룹 상세 페이지로 이동
-          router.push(`/group/${data.id}`);
+          router.replace(`/group/detail/${data.id}`);
+          console.log('그룹 생성 후 페이지 이동');
         },
         onError: (error) => {
           toast.show('그룹 생성에 실패했습니다', {
