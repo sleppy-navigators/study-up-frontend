@@ -12,6 +12,7 @@ import {
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { Group, UserCheck, UserX } from '@tamagui/lucide-icons';
 import { InvitationSuccessModal } from '../components/invitation-success-modal';
+import { router } from 'expo-router';
 
 // 임시 타입 정의
 interface InvitationDetails {
@@ -60,8 +61,10 @@ export default function InvitationViewPage() {
     try {
       setLoading(true);
       // 실제 구현에서는 API 호출로 초대 수락 처리
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setShowSuccessModal(true);
+      console.log('navigating to group detail');
+      router.replace(`/group/detail/${invitation?.groupId}`);
+
+      // setShowSuccessModal(true);
     } catch (error) {
       setError('초대 수락에 실패했습니다.');
     } finally {
