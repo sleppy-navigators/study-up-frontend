@@ -45,10 +45,13 @@ credentials.json
 .tamagui/
 
 # android
-/android
+android/
 
 # ios
-/ios
+ios/
+
+# storybook
+.storybook/
 
 # storybook
 .storybook/storybook.requires.ts

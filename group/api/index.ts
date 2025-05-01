@@ -74,7 +74,7 @@ export const groupApi = {
    * @param groupId 그룹 ID
    * @param invitationId 초대 ID
    * @param data 초대 수락 요청 데이터
-   * @returns 그룹 응답
+   * @returns 그룹 초대 응답
    */
   acceptInvitation: (
     groupId: number,
@@ -85,7 +85,7 @@ export const groupApi = {
       .post(`groups/${groupId}/invitations/${invitationId}/accept`, {
         json: data,
       })
-      .json<SuccessResponse<GroupResponse>>()
+      .json<SuccessResponse<GroupInvitationResponse>>()
       .then((res) => res.data),
 
   /**
@@ -200,7 +200,7 @@ export function useAcceptInvitation() {
   const queryClient = useQueryClient();
 
   return useMutation<
-    GroupResponse,
+    GroupInvitationResponse,
     Error,
     {
       groupId: number;

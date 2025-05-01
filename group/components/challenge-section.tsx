@@ -154,7 +154,13 @@ function ChallengeCard({
 
         <XStack space="$2" alignItems="center">
           <Text fontSize="$2" color="$gray9">
-            챌린저: {challenge.challengerName}
+            챌린저: {challenge.challengerDetail.challengerName}
+          </Text>
+
+          <Text
+            fontSize="$2"
+            color={challenge.isCompleted ? '$green10' : '$red10'}>
+            {challenge.isCompleted ? '완료됨' : '진행 중'}
           </Text>
         </XStack>
 
