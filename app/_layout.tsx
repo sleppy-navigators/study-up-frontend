@@ -14,6 +14,10 @@ import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { TamaguiProvider } from 'tamagui';
 import StorybookProvider from '@/base/providers/storybook-provider';
 
+if (__DEV__) {
+  require('@/ReactotronConfig');
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
