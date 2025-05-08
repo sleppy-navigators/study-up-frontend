@@ -30,7 +30,6 @@ export default function RootLayout() {
             <QueryProvider>
               <SafeAreaView style={{ flex: 1 }}>
                 <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-
                 <Stack
                   screenOptions={{
                     header: (props) => <Header />,
