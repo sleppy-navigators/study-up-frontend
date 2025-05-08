@@ -1,8 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { BountyItem } from '../components/bounty-item';
 
-const meta: Meta<typeof BountyItem> = {
-  title: 'Base/Components/BountyItem',
+const meta = {
+  title: 'Bounty/Components/BountyItem',
   component: BountyItem,
   parameters: {
     layout: 'centered',
@@ -10,7 +10,7 @@ const meta: Meta<typeof BountyItem> = {
   argTypes: {
     onClaim: { action: 'claimed' },
   },
-};
+} satisfies Meta<typeof BountyItem>;
 
 export default meta;
 type Story = StoryObj<typeof BountyItem>;
