@@ -55,3 +55,6 @@ ios/
 
 # storybook
 .storybook/storybook.requires.ts
+
+# cursor
+.cursor/
