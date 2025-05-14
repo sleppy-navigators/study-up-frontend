@@ -61,7 +61,22 @@ export default ({ config }) => ({
           'Allow StudyUp to access your Face ID biometric data.',
       },
     ],
-    'expo-font',
+    [
+      'expo-font',
+      {
+        fonts: [
+          './assets/fonts/pretendard/Pretendard-Thin.otf',
+          './assets/fonts/pretendard/Pretendard-ExtraLight.otf',
+          './assets/fonts/pretendard/Pretendard-Light.otf',
+          './assets/fonts/pretendard/Pretendard-Regular.otf',
+          './assets/fonts/pretendard/Pretendard-Medium.otf',
+          './assets/fonts/pretendard/Pretendard-SemiBold.otf',
+          './assets/fonts/pretendard/Pretendard-Bold.otf',
+          './assets/fonts/pretendard/Pretendard-ExtraBold.otf',
+          './assets/fonts/pretendard/Pretendard-Black.otf',
+        ],
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,
