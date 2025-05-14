@@ -2,6 +2,8 @@
 
 ## Size Tokens
 
+size token은 width, height, minWidth, minHeight, maxWidth, maxHeight에 적용됩니다.
+
 | Token   |  px |
 | :------ | --: |
 | `$0`    |   0 |
@@ -38,6 +40,8 @@
 
 ## Radius Tokens
 
+borderRadius, borderTopLeftRadius, borderBottomrightRadius 등 코너 반경 속성에 적용됩니다.
+
 | Token  |  px |
 | :----- | --: |
 | `0`    |   0 |
@@ -58,6 +62,8 @@
 ---
 
 ## Space Tokens
+
+Space Tokens는 margin, padding, borderWidth 등 스페이싱 관련 속성에 적용됩니다.
 
 | Token    |   px |
 | :------- | ---: |
@@ -130,3 +136,27 @@
 | `3`   |     300 |
 | `4`   |     400 |
 | `5`   |     500 |
+
+## Font Sizes
+
+font size는 Heading, Paragraph, SizableText, Text에 적용할 수 있습니다
+
+| Size Key | Body Font Size (px) | Heading Font Size (px) | Heading Level Font Size (px) |
+| -------- | ------------------- | ---------------------- | ---------------------------- |
+| 1        | 11                  | 15.4                   |                              |
+| 2        | 12                  | 16.8                   |                              |
+| 3        | 13                  | 18.2                   |                              |
+| 4        | 14                  | 19.6                   |                              |
+| 5        | 16                  | 22.4                   |                              |
+| 6        | 18                  | 25.2                   | 25.2 (H5)                    |
+| 7        | 20                  | 28                     | 28.0 (H4)                    |
+| 8        | 23                  | 32.2                   | 32.2 (H3)                    |
+| 9        | 30                  | 42                     | 42.0 (H2)                    |
+| 10       | 46                  | 64.4                   | 64.4 (H1)                    |
+| 11       | 55                  | 77                     |                              |
+| 12       | 62                  | 86.8                   |                              |
+| 13       | 72                  | 100.8                  |                              |
+| 14       | 92                  | 128.8                  |                              |
+| 15       | 114                 | 159.6                  |                              |
+| 16       | 134                 | 187.6                  |                              |
+| true     | 14                  | 19.6                   |                              |
