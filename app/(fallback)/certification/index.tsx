@@ -1,5 +1,5 @@
 import { useLocalSearchParams } from 'expo-router';
-import { CertificationPage } from '../../../certification/pages/certification-page';
+import { CertificationPage } from '../../../domains/certification/pages/certification-page';
 
 export default function CertificationScreen() {
   const { challengeId, taskId } = useLocalSearchParams<{

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import { GroupDetailPage } from '@/group/pages/group-detail-page';
+import { GroupDetailPage } from '@/domains/group/pages/group-detail-page';
 
 export default function GroupDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();

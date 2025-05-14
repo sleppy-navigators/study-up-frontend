@@ -2,7 +2,7 @@ import { createTamagui } from 'tamagui';
 import { shorthands } from '@tamagui/shorthands';
 import { themes, tokens } from '@tamagui/themes';
 import { defaultConfig } from '@tamagui/config/v4';
-import { createPretendardFont } from '@/base/lib/create-pretendard-font';
+import { createPretendardFont } from '@/domains/base/lib/create-pretendard-font';
 import { createAnimations } from '@tamagui/animations-react-native';
 
 const customConfig = {

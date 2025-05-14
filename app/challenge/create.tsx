@@ -1,4 +1,4 @@
-import CreateChallengePage from '@/challenge/pages/create-challenge';
+import CreateChallengePage from '@/domains/challenge/pages/create-challenge';
 import { useLocalSearchParams } from 'expo-router';
 
 export default function CreateChallengeRoute() {

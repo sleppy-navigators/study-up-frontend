@@ -2,7 +2,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import { router, usePathname } from 'expo-router';
 import { useCallback } from 'react';
 import { ResetOptions } from '@/lib/errors/http';
-import { useAuthStore } from '@/auth/stores/authStore';
+import { useAuthStore } from '@/domains/auth/stores/authStore';
 
 export const useRecoverFromError = () => {
   const queryClient = useQueryClient();

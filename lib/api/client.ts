@@ -10,8 +10,8 @@ import {
   ServerError,
   ServiceUnavailableError,
 } from '../errors/http';
-import { authService } from '@/auth/services/auth';
-import { authApi } from '@/auth/api';
+import { authService } from '@/domains/auth/services/auth';
+import { authApi } from '@/domains/auth/api';
 
 const handleTokenRefresh = async (
   request: KyRequest,
