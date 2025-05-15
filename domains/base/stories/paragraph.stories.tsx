@@ -13,7 +13,7 @@ const LONG_TEXT =
 const MAX_LINES = 2;
 
 const meta: Meta<typeof Paragraph> = {
-  title: 'Base/Paragraph',
+  title: 'Base/Components/Paragraph',
   component: Paragraph,
   tags: ['autodocs'],
 };

@@ -10,7 +10,7 @@ import {
 } from '../components/heading';
 
 const meta: Meta = {
-  title: 'Base/Heading',
+  title: 'Base/Components/Heading',
   component: Heading1,
 } satisfies Meta<typeof Heading1>;
 
