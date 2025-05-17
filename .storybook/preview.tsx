@@ -6,6 +6,7 @@ import appConfig from '../tamagui.config';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryProvider } from '../lib/react-query';
 import StyledSafeAreaView from '../domains/base/providers/safe-area-view';
+import MockingProvider from '../mocks/mocking-provider';
 
 const preview: Preview = {
   parameters: {
@@ -18,17 +19,19 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <TamaguiProvider config={appConfig} defaultTheme={'light'}>
-        <ThemeProvider value={DefaultTheme}>
-          <SafeAreaProvider>
-            <QueryProvider>
-              <StyledSafeAreaView style={{ flex: 1 }}>
-                <Story />
-              </StyledSafeAreaView>
-            </QueryProvider>
-          </SafeAreaProvider>
-        </ThemeProvider>
-      </TamaguiProvider>
+      <MockingProvider>
+        <TamaguiProvider config={appConfig} defaultTheme={'light'}>
+          <ThemeProvider value={DefaultTheme}>
+            <SafeAreaProvider>
+              <QueryProvider>
+                <StyledSafeAreaView style={{ flex: 1 }}>
+                  <Story />
+                </StyledSafeAreaView>
+              </QueryProvider>
+            </SafeAreaProvider>
+          </ThemeProvider>
+        </TamaguiProvider>
+      </MockingProvider>
     ),
   ],
 };
