@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { QueryProvider } from '../lib/react-query';
 import StyledSafeAreaView from '../domains/base/providers/safe-area-view';
 import MockingProvider from '../mocks/mocking-provider';
+import ReactotronProvider from '../domains/base/providers/reactotron-provider';
 
 const preview: Preview = {
   parameters: {
@@ -19,19 +20,21 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <MockingProvider>
-        <TamaguiProvider config={appConfig} defaultTheme={'light'}>
-          <ThemeProvider value={DefaultTheme}>
-            <SafeAreaProvider>
-              <QueryProvider>
-                <StyledSafeAreaView style={{ flex: 1 }}>
-                  <Story />
-                </StyledSafeAreaView>
-              </QueryProvider>
-            </SafeAreaProvider>
-          </ThemeProvider>
-        </TamaguiProvider>
-      </MockingProvider>
+      <ReactotronProvider>
+        <MockingProvider>
+          <TamaguiProvider config={appConfig} defaultTheme={'light'}>
+            <ThemeProvider value={DefaultTheme}>
+              <SafeAreaProvider>
+                <QueryProvider>
+                  <StyledSafeAreaView style={{ flex: 1 }}>
+                    <Story />
+                  </StyledSafeAreaView>
+                </QueryProvider>
+              </SafeAreaProvider>
+            </ThemeProvider>
+          </TamaguiProvider>
+        </MockingProvider>
+      </ReactotronProvider>
     ),
   ],
 };
