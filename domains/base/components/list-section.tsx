@@ -1,6 +1,7 @@
 import type React from 'react';
-import { H3, YStack } from 'tamagui';
+import { YStack } from 'tamagui';
 import { ListItem, type ListItemProps } from './list-item';
+import { Heading1, Heading2, Heading3 } from './heading';
 
 export interface ListSectionProps {
   title?: string;
@@ -21,7 +22,7 @@ export function ListSection({
         (renderHeader ? (
           renderHeader(title)
         ) : (
-          <H3 fontWeight="bold">{title}</H3>
+          <Heading1 fontWeight="600">{title}</Heading1>
         ))}
 
       <YStack gap="$2" backgroundColor="$background" borderRadius="$2">
