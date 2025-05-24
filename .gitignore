@@ -49,10 +49,6 @@ android/
 
 # ios
 ios/
-
-# storybook
-.storybook/
-
 # storybook
 .storybook/storybook.requires.ts
 
