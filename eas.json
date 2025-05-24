@@ -30,5 +30,13 @@
         "credentialsSource": "local"
       }
     }
+  },
+  "submit": {
+    "production": {
+      "android": {
+        "serviceAccountKeyPath": "credentials/android/service-account.json",
+        "track": "track1"
+      }
+    }
   }
 }
