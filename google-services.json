@@ -14,20 +14,16 @@
       },
       "oauth_client": [
         {
-          "client_id": "425832297557-8itfsu5eo4jf3ju0munr2ag80kkka2fa.apps.googleusercontent.com",
+          "client_id": "425832297557-aa4rt3timcko3v2o5cinompr6lq0eaaq.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sleppynavigators.studyup",
-            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+            "certificate_hash": "57f8bba249ce3e8668a31af123d045e734a40988"
           }
         },
         {
-          "client_id": "425832297557-vohrgrt63dp2trts5cput9kodgrqbu5e.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sleppynavigators.studyup",
-            "certificate_hash": "f1e3e61eb1f512bc2466e22644b00724a5f5601c"
-          }
+          "client_id": "425832297557-7serit12s908077334e928rclpdu6uqm.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -38,6 +34,54 @@
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
+            {
+              "client_id": "425832297557-7serit12s908077334e928rclpdu6uqm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "425832297557-bvgv6u8qvf22b3pd4jva0vmjt83giagg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sleppynavigators.studyup"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425832297557:android:3ea4a6d9ad6756f08f50dc",
+        "android_client_info": {
+          "package_name": "com.sleppynavigators.studyup.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425832297557-viggiufjd6l01tn5mm3jdnuvikcqhhj0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sleppynavigators.studyup.dev",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "425832297557-7serit12s908077334e928rclpdu6uqm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWXVFRQgR34xsYEaaWStbq_9NxZjsgEhs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425832297557-7serit12s908077334e928rclpdu6uqm.apps.googleusercontent.com",
+              "client_type": 3
+            },
             {
               "client_id": "425832297557-bvgv6u8qvf22b3pd4jva0vmjt83giagg.apps.googleusercontent.com",
               "client_type": 2,
