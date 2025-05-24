@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+build-*
 
 # Native
 *.orig.*
@@ -54,3 +55,4 @@ ios/
 
 # cursor
 .cursor/
+
