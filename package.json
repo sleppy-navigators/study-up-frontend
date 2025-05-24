@@ -4,6 +4,9 @@
   "version": "1.0.0",
   "packageManager": "bun@1.1.43",
   "scripts": {
+    "dev": "eas build --profile development",
+    "preview": "eas build --profile preview",
+    "production": "eas build --profile production",
     "start": "cross-env APP_VARIANT=development expo start --dev-client --clear",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "cross-env APP_VARIANT=development expo run:android",
