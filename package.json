@@ -4,11 +4,14 @@
   "version": "1.0.0",
   "packageManager": "bun@1.1.43",
   "scripts": {
-    "start": "expo start --dev-client --clear",
+    "dev": "eas build --profile development",
+    "preview": "eas build --profile preview",
+    "prod": "eas build --profile production",
+    "start": "cross-env APP_VARIANT=development expo start --dev-client --clear",
     "reset-project": "node ./scripts/reset-project.js",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
-    "web": "expo start --web",
+    "android": "cross-env APP_VARIANT=development expo run:android",
+    "ios": "cross-env APP_VARIANT=development expo run:ios",
+    "web": "cross-env APP_VARIANT=development expo start --web",
     "test": "jest --watchAll",
     "lint": "expo lint",
     "lint-fix": "eslint . --fix",
@@ -16,9 +19,9 @@
     "test-deeplink": "adb shell am start -W -a android.intent.action.VIEW -d \"com.sleppynavigators.studyup://invitations/1?invitationKey=1dbf550e-8d74-4b6a-831b-879f0ca1b514\" com.sleppynavigators.studyup",
     "test-deeplink:dev": "adb shell am start -W -a android.intent.action.VIEW -d \"exp+studyup://invitations/1?invitationKey=1dbf550e-8d74-4b6a-831b-879f0ca1b514\" com.sleppynavigators.studyup",
     "storybook-generate": "sb-rn-get-stories",
-    "storybook": "cross-env STORYBOOK_ENABLED='true' bun start",
-    "storybook:ios": "cross-env STORYBOOK_ENABLED='true' bun ios",
-    "storybook:android": "cross-env STORYBOOK_ENABLED='true' bun android"
+    "start-storybook": "cross-env STORYBOOK_ENABLED='true' bun start",
+    "start-storybook:ios": "cross-env STORYBOOK_ENABLED='true' bun ios",
+    "start-storybook:android": "cross-env STORYBOOK_ENABLED='true' bun android"
   },
   "jest": {
     "preset": "jest-expo"
@@ -47,7 +50,7 @@
     "dom-to-image": "^2.6.0",
     "expo": "~52.0.46",
     "expo-blur": "~14.0.3",
-    "expo-build-properties": "~0.13.2",
+    "expo-build-properties": "~0.13.3",
     "expo-clipboard": "^7.0.1",
     "expo-constants": "~17.0.8",
     "expo-dev-client": "~5.0.19",
@@ -57,15 +60,17 @@
     "expo-image-picker": "~16.0.6",
     "expo-linking": "~7.0.5",
     "expo-media-library": "~17.0.6",
-    "expo-router": "~4.0.20",
+    "expo-router": "~4.0.21",
     "expo-secure-store": "~14.0.1",
     "expo-splash-screen": "~0.29.24",
     "expo-status-bar": "^2.0.1",
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.9",
     "expo-web-browser": "~14.0.2",
+    "fast-text-encoding": "^1.0.6",
     "firebase": "^11.2.0",
     "ky": "^1.7.4",
+    "msw": "^2.8.2",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-error-boundary": "^5.0.0",
@@ -76,6 +81,7 @@
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-svg": "15.8.0",
+    "react-native-url-polyfill": "^2.0.0",
     "react-native-view-shot": "^4.0.3",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
@@ -88,8 +94,8 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@gorhom/bottom-sheet": "^5.1.2",
-    "@react-native-async-storage/async-storage": "^2.1.2",
-    "@react-native-community/slider": "^4.5.6",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "@react-native-community/slider": "4.5.5",
     "@storybook/addon-ondevice-actions": "^8.6.2",
     "@storybook/addon-ondevice-controls": "^8.6.2",
     "@storybook/react-native": "^8.6.2",
@@ -109,10 +115,21 @@
     "jest": "^29.7.0",
     "jest-expo": "~52.0.6",
     "lint-staged": "^15.4.2",
+    "msw-storybook-addon": "^2.0.4",
     "prettier": "^3.4.2",
     "react-test-renderer": "18.3.1",
     "reactotron-react-native": "^5.1.13",
     "typescript": "^5.3.3"
+  },
+  "expo": {
+    "doctor": {
+      "reactNativeDirectoryCheck": {
+        "exclude": [
+          "tamagui"
+        ],
+        "listUnknownPackages": false
+      }
+    }
   },
   "private": true
 }

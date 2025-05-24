@@ -8,6 +8,7 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+build-*
 
 # Native
 *.orig.*
@@ -49,12 +50,9 @@ android/
 
 # ios
 ios/
-
-# storybook
-.storybook/
-
 # storybook
 .storybook/storybook.requires.ts
 
 # cursor
 .cursor/
+

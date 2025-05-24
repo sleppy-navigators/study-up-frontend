@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Spinner, Text, YStack } from 'tamagui';
 import { SuspenseProvider } from '@/components/SuspenseProvider';
 import { Route, router, useLocalSearchParams } from 'expo-router';
-import { useSignInMutation } from '@/auth/api';
+import { useSignInMutation } from '@/domains/auth/api';
 
 function Index() {
   const { redirectTo } = useLocalSearchParams();

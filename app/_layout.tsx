@@ -9,10 +9,11 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { Header } from '@/base/components/header';
+import { Header } from '@/domains/base/components/header';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import { TamaguiProvider } from 'tamagui';
-import StorybookProvider from '@/base/providers/storybook-provider';
+import StorybookProvider from '@/domains/base/providers/storybook-provider';
+import StyledSafeAreaView from '@/domains/base/providers/safe-area-view';
 
 if (__DEV__) {
   require('@/ReactotronConfig');
@@ -28,9 +29,8 @@ export default function RootLayout() {
           value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
           <SafeAreaProvider>
             <QueryProvider>
-              <SafeAreaView style={{ flex: 1 }}>
+              <StyledSafeAreaView style={{ flex: 1 }}>
                 <StatusBar style={colorScheme === 'dark' ? 'light' : 'dark'} />
-
                 <Stack
                   screenOptions={{
                     header: (props) => <Header />,
@@ -49,7 +49,7 @@ export default function RootLayout() {
                     options={{ headerShown: true }}
                   />
                 </Stack>
-              </SafeAreaView>
+              </StyledSafeAreaView>
             </QueryProvider>
           </SafeAreaProvider>
         </ThemeProvider>

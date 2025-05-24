@@ -1,6 +1,29 @@
+import { match } from 'ts-pattern';
+
+const APP_ID_PREFIX = 'com.sleppynavigators.studyup';
+const APP_NAME_PREFIX = 'StudyUp';
+
+const getUniqueIdentifier = () => {
+  return match(process.env.APP_VARIANT)
+    .with('development', () => `${APP_ID_PREFIX}.dev`)
+    .with('preview', () => `${APP_ID_PREFIX}.preview`)
+    .otherwise(() => APP_ID_PREFIX);
+};
+
+const getAppName = () => {
+  return match(process.env.APP_VARIANT)
+    .with('development', () => `${APP_NAME_PREFIX} (Dev)`)
+    .with('preview', () => `${APP_NAME_PREFIX} (Preview)`)
+    .otherwise(() => APP_NAME_PREFIX);
+};
+
+console.log('APP VARIANT', process.env.APP_VARIANT);
+console.log('UNIQUE IDENTIFIER', getUniqueIdentifier());
+console.log('APP NAME', getAppName());
+
 export default ({ config }) => ({
   ...config,
-  name: 'StudyUp',
+  name: getAppName(),
   slug: 'StudyUp',
   version: '1.0.0',
   orientation: 'portrait',
@@ -10,7 +33,7 @@ export default ({ config }) => ({
   newArchEnabled: true,
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.sleppynavigators.studyup',
+    bundleIdentifier: getUniqueIdentifier(),
     config: {
       googleSignIn: {
         reservedClientId:
@@ -24,7 +47,7 @@ export default ({ config }) => ({
       foregroundImage: './assets/images/icon.png',
       backgroundColor: '#ffffff',
     },
-    package: 'com.sleppynavigators.studyup',
+    package: getUniqueIdentifier(),
     googleServicesFile: './google-services.json',
   },
   web: {
@@ -61,7 +84,22 @@ export default ({ config }) => ({
           'Allow StudyUp to access your Face ID biometric data.',
       },
     ],
-    'expo-font',
+    [
+      'expo-font',
+      {
+        fonts: [
+          './assets/fonts/pretendard/Pretendard-Thin.otf',
+          './assets/fonts/pretendard/Pretendard-ExtraLight.otf',
+          './assets/fonts/pretendard/Pretendard-Light.otf',
+          './assets/fonts/pretendard/Pretendard-Regular.otf',
+          './assets/fonts/pretendard/Pretendard-Medium.otf',
+          './assets/fonts/pretendard/Pretendard-SemiBold.otf',
+          './assets/fonts/pretendard/Pretendard-Bold.otf',
+          './assets/fonts/pretendard/Pretendard-ExtraBold.otf',
+          './assets/fonts/pretendard/Pretendard-Black.otf',
+        ],
+      },
+    ],
   ],
   experiments: {
     typedRoutes: true,

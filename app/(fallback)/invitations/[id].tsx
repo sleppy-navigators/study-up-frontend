@@ -17,9 +17,9 @@ import {
   useInvitationQuery,
   useAcceptInvitation,
   useGroupQuery,
-} from '@/group/api';
-import { InvitationSuccessModal } from '@/group/components/invitation-success-modal';
-import { Header } from '@/base/components/header';
+} from '@/domains/group/api';
+import { InvitationSuccessModal } from '@/domains/group/components/invitation-success-modal';
+import { Header } from '@/domains/base/components/header';
 
 export default function InvitationView() {
   const router = useRouter();

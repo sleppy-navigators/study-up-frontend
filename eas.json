@@ -3,6 +3,9 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "development"
+      },
       "android": {
         "credentialsSource": "local"
       },
@@ -11,8 +14,21 @@
       }
     },
     "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "APP_VARIANT": "preview"
+      },
+      "android": {
+        "credentialsSource": "local"
+      }
     },
-    "production": {}
+    "production": {
+      "env": {
+        "APP_VARIANT": "production"
+      },
+      "android": {
+        "credentialsSource": "local"
+      }
+    }
   }
 }

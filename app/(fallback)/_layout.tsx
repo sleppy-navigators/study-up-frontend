@@ -4,10 +4,10 @@ import { useRecoverFromError } from '@/hooks/useRecoverFromError';
 import { ResetOptions } from '@/lib/errors/http';
 import { ErrorBoundaryProps } from 'expo-router';
 import React, { useCallback, useState } from 'react';
-import { BottomNavigation } from '@/base/components/bottom-navigation';
+import { BottomNavigation } from '@/domains/base/components/bottom-navigation';
 import { YStack } from 'tamagui';
-import GlobalLoadingFallback from '@/base/providers/global-loading-fallback';
-import AuthGuardProvider from '@/auth/providers/AuthGuardProvider';
+import GlobalLoadingFallback from '@/domains/base/providers/global-loading-fallback';
+import AuthGuardProvider from '@/domains/auth/providers/auth-guard-provider';
 import { Toast } from '@tamagui/toast';
 import { ToastProvider, ToastViewport } from '@tamagui/toast';
 
