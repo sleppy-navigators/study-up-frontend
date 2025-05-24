@@ -17,11 +17,17 @@
       "distribution": "internal",
       "env": {
         "APP_VARIANT": "preview"
+      },
+      "android": {
+        "credentialsSource": "local"
       }
     },
     "production": {
       "env": {
         "APP_VARIANT": "production"
+      },
+      "android": {
+        "credentialsSource": "local"
       }
     }
   }
