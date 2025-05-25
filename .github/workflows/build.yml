@@ -48,12 +48,15 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install
 
-      - name: 🏗 Setup Expo and EAS
-        uses: expo/expo-github-action@v8
-        with:
-          token: ${{ secrets.EXPO_TOKEN }}
-          expo-version: latest
-          eas-version: latest
+      - name: 📦 Install Expo CLI
+        run: bun add -g expo-cli
+
+      - name: 📦 Install EAS CLI (fork)
+        run: bun add -g sleppy-navigators/eas-cli
+
+      - name: 🛠 Patch ENOSPC (Ubuntu only)
+        if: runner.os == 'Linux'
+        run: sudo sysctl fs.inotify.max_user_watches=524288
 
       - name: 🔑 Decode credentials
         run: echo ${{ secrets.CREDENTIALS_JSON_BASE64 }} | base64 -d > credentials.json
@@ -78,7 +81,11 @@ jobs:
             --output=./output \
             --platform=${{ github.event.inputs.platform }} \
             --profile=${{ github.event.inputs.profile }}
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
       - name: 🚢 Submit
         if: ${{ github.event.inputs.should_submit }}
         run: eas submit -p ${{ github.event.inputs.platform }} --profile ${{ github.event.inputs.profile }} --path output
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
