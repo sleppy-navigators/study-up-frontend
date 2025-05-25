@@ -54,6 +54,9 @@ jobs:
       - name: 📦 Install EAS CLI (fork)
         run: bun add -g sleppy-navigators/eas-cli
 
+      - name: ➕ Add bun global bin to PATH
+        run: echo "${HOME}/.bun/bin" >> $GITHUB_PATH
+
       - name: 🛠 Patch ENOSPC (Ubuntu only)
         if: runner.os == 'Linux'
         run: sudo sysctl fs.inotify.max_user_watches=524288
