@@ -48,6 +48,13 @@ jobs:
       - name: 📦 Install dependencies
         run: bun install
 
+      - name: 🐞 Debug Bun global bin
+        run: |
+          echo "PATH=$PATH"
+          ls -l ${HOME}/.bun/bin
+          which eas || echo "eas not found"
+          bun which eas || echo "bun which eas: not found"
+
       - name: 📦 Install Expo CLI
         run: bun add -g expo-cli
 
