@@ -8,6 +8,9 @@ node_modules/
 dist/
 web-build/
 expo-env.d.ts
+
+# EAS
+output
 build-*
 
 # Native
