@@ -51,13 +51,8 @@ jobs:
       - name: 📦 Install Expo CLI
         run: bun add -g expo-cli
 
-      - name: 🏗 Setup npm
-        run: |
-          corepack enable
-          corepack prepare npm@latest --activate
-
       - name: 📦 Install EAS CLI (fork)
-        run: npm install -g 'https://gitpkg.vercel.app/sleppy-navigators/eas-cli/packages/eas-cli?main'
+        run: bun add -g '@sleppy-navigators/eas-cli'
 
       - name: 🛠 Patch ENOSPC (Ubuntu only)
         if: runner.os == 'Linux'
