@@ -51,7 +51,7 @@ jobs:
           corepack prepare npm@latest --activate
 
       - name: 📦 Install subdirectory package with npm
-        run: npm install -g "github:sleppy-navigators/eas-cli/packages/eas-cli"
+        run: npm install -g 'https://gitpkg.vercel.app/sleppy-navigators/eas-cli/packages/eas-cli?main'
 
       - name: 📦 Install dependencies
         run: bun install
