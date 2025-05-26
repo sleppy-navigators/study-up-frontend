@@ -84,8 +84,22 @@ jobs:
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 🚢 Submit
-        if: ${{ github.event.inputs.should_submit }}
-        run: eas submit -p ${{ github.event.inputs.platform }} --profile ${{ github.event.inputs.profile }} --path output
-        env:
-          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+      - name: 🏗️ Cache Fastlane gems
+        uses: actions/cache@v4
+        with:
+          path: ~/.gem
+          key: ${{ runner.os }}-gem-fastlane-${{ hashFiles('**/Gemfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-gem-fastlane-
+
+      - name: 🛠️ Install Fastlane
+        run: gem install fastlane
+
+      - name: 🚀 Upload to Google Play (Fastlane)
+        if: ${{ github.event.inputs.platform == 'android' && github.event.inputs.should_submit }}
+        run: |
+          fastlane supply \
+            --aab ./output \
+            --json_key credentials/android/service-account.json \
+            --package_name com.sleppynavigators.studyup \
+            --track track1
