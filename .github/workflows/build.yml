@@ -45,32 +45,19 @@ jobs:
       - name: 🏗 Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: 🏗 Setup pnpm
-        run: |
-          corepack enable
-          corepack prepare npm@latest --activate
-
-      - name: 📦 Install subdirectory package with npm
-        run: npm install -g 'https://gitpkg.vercel.app/sleppy-navigators/eas-cli/packages/eas-cli?main'
-
       - name: 📦 Install dependencies
         run: bun install
-
-      - name: 🐞 Debug Bun global bin
-        run: |
-          echo "PATH=$PATH"
-          ls -l ${HOME}/.bun/bin
-          which eas || echo "eas not found"
-          bun which eas || echo "bun which eas: not found"
 
       - name: 📦 Install Expo CLI
         run: bun add -g expo-cli
 
-      - name: 📦 Install EAS CLI (fork)
-        run: bun add -g sleppy-navigators/eas-cli
+      - name: 🏗 Setup npm
+        run: |
+          corepack enable
+          corepack prepare npm@latest --activate
 
-      - name: ➕ Add bun global bin to PATH
-        run: echo "${HOME}/.bun/bin" >> $GITHUB_PATH
+      - name: 📦 Install EAS CLI (fork)
+        run: npm install -g 'https://gitpkg.vercel.app/sleppy-navigators/eas-cli/packages/eas-cli?main'
 
       - name: 🛠 Patch ENOSPC (Ubuntu only)
         if: runner.os == 'Linux'
