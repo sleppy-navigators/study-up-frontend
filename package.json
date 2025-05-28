@@ -21,7 +21,8 @@
     "storybook-generate": "sb-rn-get-stories",
     "start-storybook": "cross-env STORYBOOK_ENABLED='true' bun start",
     "start-storybook:ios": "cross-env STORYBOOK_ENABLED='true' bun ios",
-    "start-storybook:android": "cross-env STORYBOOK_ENABLED='true' bun android"
+    "start-storybook:android": "cross-env STORYBOOK_ENABLED='true' bun android",
+    "act:build": "act --container-architecture linux/amd64 --platform ubuntu-latest=catthehacker/ubuntu:act-latest,macos-latest=-self-hosted --workflows .github/workflows/build.yml --input-file act/build/.inputs --secret-file act/build/.secrets --env-file act/build/.env"
   },
   "jest": {
     "preset": "jest-expo"
