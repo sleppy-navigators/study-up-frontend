@@ -10,7 +10,7 @@ web-build/
 expo-env.d.ts
 
 # EAS
-output
+output.*
 build-*
 
 # Native
@@ -61,3 +61,5 @@ ios/
 
 # act
 act/
+
+# fastlane
