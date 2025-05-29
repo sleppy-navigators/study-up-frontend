@@ -54,6 +54,17 @@ jobs:
       - name: 📦 Install EAS CLI (fork)
         run: bun add -g '@sleppy-navigators/eas-cli'
 
+      - name: Set up JDK 17
+        if: ${{ env.ACT }}
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        if: ${{ env.ACT }}
+        uses: android-actions/setup-android@v3
+
       - name: 🛠 Patch ENOSPC (Ubuntu only)
         if: runner.os == 'Linux'
         run: sudo sysctl fs.inotify.max_user_watches=524288
@@ -74,32 +85,33 @@ jobs:
       # - name: 📋 Test project
       #   run: bun test
 
-      - name: 👷 Build app
+      - name: 👷 Build Android app
+        if: ${{ github.event.inputs.platform == 'android' }}
         run: |
           eas build --local \
             --non-interactive \
-            --output=./output \
+            --output=./output.aab \
             --platform=${{ github.event.inputs.platform }} \
             --profile=${{ github.event.inputs.profile }}
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
-      - name: 🏗️ Cache Fastlane gems
-        uses: actions/cache@v4
+      - name: 📦 Install Ruby
+        uses: ruby/setup-ruby@v1
+        if: ${{ env.ACT }}
         with:
-          path: ~/.gem
-          key: ${{ runner.os }}-gem-fastlane-${{ hashFiles('**/Gemfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-gem-fastlane-
-
-      - name: 🛠️ Install Fastlane
-        run: gem install fastlane
+          ruby-version: '3.4'
+          bundler-cache: true
 
       - name: 🚀 Upload to Google Play (Fastlane)
         if: ${{ github.event.inputs.platform == 'android' && github.event.inputs.should_submit }}
-        run: |
-          fastlane supply \
-            --aab ./output \
-            --json_key credentials/android/service-account.json \
-            --package_name com.sleppynavigators.studyup \
-            --track track1
+        uses: maierj/fastlane-action@v3.1.0
+        with:
+          lane: run supply
+          options: |
+            {
+              "aab": "./output.aab",
+              "json_key": "./credentials/android/service-account.json",
+              "package_name": "com.sleppynavigators.studyup",
+              "track": "track1"
+            }
