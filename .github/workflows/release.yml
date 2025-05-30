@@ -1,34 +1,11 @@
-name: Build App
+name: Release App
 on:
-  workflow_dispatch:
-    inputs:
-      os:
-        type: choice
-        description: OS to build on. Ubuntu is faster, MacOS supports iOS builds
-        options:
-          - macos-latest
-          - ubuntu-latest
-      platform:
-        type: choice
-        description: Platform to build for
-        options:
-          - android
-          - ios
-      profile:
-        type: choice
-        description: Build profile to use
-        options:
-          - development
-          - preview
-          - production
-      should_submit:
-        type: boolean
-        description: Whether to perform the submit step
-        required: true
-        default: false
+  push:
+    branches:
+      - main
 jobs:
   build:
-    runs-on: ${{ github.event.inputs.os }}
+    runs-on: ubuntu-latest
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v4
@@ -86,13 +63,12 @@ jobs:
       #   run: bun test
 
       - name: 👷 Build Android app
-        if: ${{ github.event.inputs.platform == 'android' }}
         run: |
           eas build --local \
             --non-interactive \
             --output=./output.aab \
-            --platform=${{ github.event.inputs.platform }} \
-            --profile=${{ github.event.inputs.profile }}
+            --platform=android \
+            --profile=production
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
 
@@ -104,7 +80,6 @@ jobs:
           bundler-cache: true
 
       - name: 🚀 Upload to Google Play (Fastlane)
-        if: ${{ github.event.inputs.platform == 'android' && github.event.inputs.should_submit }}
         uses: maierj/fastlane-action@v3.1.0
         with:
           lane: run supply
