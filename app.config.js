@@ -25,12 +25,18 @@ export default ({ config }) => ({
   ...config,
   name: getAppName(),
   slug: 'StudyUp',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'portrait',
   icon: './assets/images/icon.png',
   scheme: 'studyup',
   userInterfaceStyle: 'automatic',
   newArchEnabled: true,
+  updates: {
+    url: `https://u.expo.dev/7537aea3-7b65-4ae8-b4e8-adf37b4768d1`,
+    runtimeVersion: {
+      policy: 'appVersion',
+    },
+  },
   ios: {
     supportsTablet: true,
     bundleIdentifier: getUniqueIdentifier(),
