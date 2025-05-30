@@ -71,8 +71,6 @@ export default ({ config }) => ({
         },
       },
     ],
-    '@react-native-firebase/app',
-    '@react-native-firebase/auth',
     [
       'expo-splash-screen',
       {
@@ -106,6 +104,9 @@ export default ({ config }) => ({
         ],
       },
     ],
+    '@react-native-firebase/app',
+    '@react-native-firebase/auth',
+    '@react-native-firebase/crashlytics',
   ],
   experiments: {
     typedRoutes: true,
