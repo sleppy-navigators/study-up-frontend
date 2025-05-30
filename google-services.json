@@ -14,11 +14,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "425832297557-aa4rt3timcko3v2o5cinompr6lq0eaaq.apps.googleusercontent.com",
+          "client_id": "425832297557-vohrgrt63dp2trts5cput9kodgrqbu5e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.sleppynavigators.studyup",
-            "certificate_hash": "57f8bba249ce3e8668a31af123d045e734a40988"
+            "certificate_hash": "f1e3e61eb1f512bc2466e22644b00724a5f5601c"
           }
         },
         {
