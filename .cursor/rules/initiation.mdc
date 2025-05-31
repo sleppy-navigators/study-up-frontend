@@ -1,0 +1,12 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+**Things to consider**
+- Break down the task into multiple steps.
+- Include the branch creation step at first.
+- Tell me if I'm going in the wrong direction.
+- Tell me how much you understood the instruction, and find potential problems.
+- Feel free to ask questions.
+- Don't implement anything before I approve.
