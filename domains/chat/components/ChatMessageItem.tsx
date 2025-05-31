@@ -1,9 +1,9 @@
 import React from 'react';
 import { Paragraph, XStack, YStack } from 'tamagui';
 import { format } from 'date-fns';
-import { Bot } from '@tamagui/lucide-icons'; // 예시 아이콘
+import { Bot } from '@tamagui/lucide-icons';
 
-interface ChatMessageItemProps {
+export interface ChatMessageItemProps {
   senderDisplayName: string;
   content: string;
   timestamp: string; // ISO 8601 형식 또는 ZonedDateTime 문자열 표현
@@ -16,7 +16,7 @@ export function ChatMessageItem({
   content,
   timestamp,
   isBot,
-  botIcon = <Bot size="$1" color="$blue10" />, // 기본 봇 아이콘
+  botIcon = <Bot size="$1" color="$blue10" />,
 }: ChatMessageItemProps) {
   const alignItems = 'flex-start';
   const backgroundColor = '$blue2';
