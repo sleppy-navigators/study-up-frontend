@@ -19,6 +19,7 @@ import { Tag } from '@/app/components/Tag';
 import { TagRow } from '@/app/components/TagRow';
 import { ChallengeDetailSection } from '@/domains/challenge/components/challenge-detail-section';
 import { navigateToTaskCertification } from '../../challenge/utils/navigation';
+import { ChatView } from '@/domains/chat/components/chat-view';
 
 // Tab 상태를 나타내는 타입
 type TabState = 'none' | 'chat' | 'challenge' | 'challenge-detail';
@@ -185,17 +186,7 @@ export function GroupDetailPage({ groupId }: GroupDetailPageProps) {
 
     // 채팅 탭이 활성화된 경우
     if (activeTab === 'chat') {
-      return (
-        <YStack
-          flex={1}
-          justifyContent="center"
-          alignItems="center"
-          paddingVertical="$10">
-          <Text color="$gray9" textAlign="center">
-            기능 준비 중입니다
-          </Text>
-        </YStack>
-      );
+      return <ChatView groupId={groupId} />;
     }
 
     // 기본 상태 (탭이 선택되지 않은 경우)
