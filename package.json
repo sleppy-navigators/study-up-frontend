@@ -8,6 +8,7 @@
     "preview": "eas build --profile preview",
     "prod": "eas build --profile production",
     "start": "cross-env APP_VARIANT=development expo start --dev-client --clear",
+    "start:tunnel": "cross-env APP_VARIANT=development expo start --dev-client --clear --tunnel",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "cross-env APP_VARIANT=development expo run:android",
     "ios": "cross-env APP_VARIANT=development expo run:ios",
