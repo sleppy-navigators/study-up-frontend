@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, YStack, Paragraph } from 'tamagui';
-import { ChatMessageItem, ChatMessageItemProps } from './ChatMessageItem';
+import { ChatMessageItem, ChatMessageItemProps } from './chat-message-item';
 
 export interface ChatViewMessage extends ChatMessageItemProps {
   id: string;
