@@ -1,0 +1,7 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+- Compare the current branch to main and check all the commits
+- Create a pr post in '/documents/pull-requests' based on [pull-request-template.md](mdc:documents/samples/pull-request-template.md)

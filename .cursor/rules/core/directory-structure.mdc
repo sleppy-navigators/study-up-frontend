@@ -1,0 +1,48 @@
+---
+description:
+globs:
+alwaysApply: true
+---
+// Folder structure
+
+const folderStructure = ```
+src/
+├── components/ # Shared/common components
+├── hooks/ # Shared/common hooks
+├── utils/ # Shared/common utils
+├── domains/
+│ ├── bounty/
+│ │ ├── components/
+│ │ │ └── bounty-item.tsx
+│ │ ├── hooks/
+│ │ │ └── use-bounty.ts
+│ │ ├── pages/
+│ │ └── bounty-page.tsx
+│ │ └── utils/
+│ │ └── format-currency.ts
+│ │ └── stories/
+│ │ └── bounty-item.stories.tsx
+│ │ └── bounty-page.stories.tsx
+│ ├── auth/
+│ │ ├── components/
+│ │ │ └── auth-form.tsx
+│ │ ├── hooks/
+│ │ └── use-auth-query.ts
+│ │ ├── providers/
+│ │ └── auth-guard-provider.tsx
+│ │ └── api/
+│ │ └── index.ts
+│ └── base/
+│ │ ├── components/
+│ │ │ └── heading.tsx
+│ │ │ └── paragraph.tsx
+│ │ ├── hooks/
+│ │ │ └── ...
+│ │ └── lib/
+│ │ │ └── create-pretendard-font.ts
+│ │ └── providers/
+│ │ │ └── auth-guard-provider.tsx
+│ │ └── stories/
+│ │ │ └── heading.stories.tsx
+│ │ │ └── paragraph.stories.tsx
+```;

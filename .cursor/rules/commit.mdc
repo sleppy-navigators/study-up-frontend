@@ -1,0 +1,28 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Git Usage
+
+Commit Message Prefixes:
+
+- "fix:" for bug fixes
+- "feat:" for new features
+- "perf:" for performance improvements
+- "docs:" for documentation changes
+- "style:" for formatting changes
+- "refactor:" for code refactoring
+- "test:" for adding missing tests
+- "chore:" for maintenance tasks
+- "storybook:" for maintenance tasks
+- "ci:" for ci pipeline changes
+- "cd:" for cd pipeline changes
+- "infra:" for instrastructural changes
+
+Commit Message Body:
+
+- Use lowercase for commit messages
+- Keep the summary line concise with a maximum of 100 characters
+- Reference issue numbers when applicable
+

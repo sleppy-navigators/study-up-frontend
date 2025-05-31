@@ -1,0 +1,174 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Cursor Rules for Storybook (React Native) v8.x
+# Source: Official Storybook React Native docs, Context7, and best practices
+
+rules:
+  - id: storybook-directory-structure
+    description: |
+      All Storybook configuration files must be placed in a top-level `.storybook` directory at the project root.
+    pattern:
+      - .storybook/main.ts
+      - .storybook/preview.tsx
+      - .storybook/index.tsx
+      - .storybook/storybook.requires.ts (auto-generated)
+
+    severity: error
+
+  - id: storybook-main-config
+    description: |
+      The `.storybook/main.ts` file must use the `StorybookConfig` type from `@storybook/react-native` and define the `stories` glob, and the `addons` array with on-device addons. Example:
+
+      ```typescript
+      import type { StorybookConfig } from '@storybook/react-native';
+      const main: StorybookConfig = {
+        stories: ['../components/**/*.stories.?(ts|tsx|js|jsx)'],
+        addons: [
+          '@storybook/addon-ondevice-notes',
+          '@storybook/addon-ondevice-controls',
+          '@storybook/addon-ondevice-backgrounds',
+          '@storybook/addon-ondevice-actions',
+        ],
+      };
+      export default main;
+      ```
+    pattern: .storybook/main.ts
+    severity: error
+
+  - id: storybook-preview-config
+    description: |
+      The `.storybook/preview.tsx` file must use the `Preview` type from `@storybook/react` and export a config object with global `decorators` and `parameters`. Backgrounds should be configured for on-device backgrounds. Example:
+
+      ```typescript
+      import type { Preview } from '@storybook/react';
+      import { withBackgrounds } from '@storybook/addon-ondevice-backgrounds';
+      const preview: Preview = {
+        decorators: [withBackgrounds],
+        parameters: {
+          backgrounds: {
+            default: 'plain',
+            values: [
+              { name: 'plain', value: 'white' },
+              { name: 'warm', value: 'hotpink' },
+              { name: 'cool', value: 'deepskyblue' },
+            ],
+          },
+        },
+      };
+      export default preview;
+      ```
+    pattern: .storybook/preview.tsx
+    severity: error
+
+  - id: storybook-index-config
+    description: |
+      The `.storybook/index.tsx` file must initialize Storybook UI using `getStorybookUI` from `@storybook/react-native` or `view.getStorybookUI` from `storybook.requires`, and configure AsyncStorage for persistence. Example:
+
+      ```typescript
+      import { view } from './storybook.requires';
+      import AsyncStorage from '@react-native-async-storage/async-storage';
+      const StorybookUIRoot = view.getStorybookUI({
+        storage: {
+          getItem: AsyncStorage.getItem,
+          setItem: AsyncStorage.setItem,
+        },
+      });
+      export default StorybookUIRoot;
+      ```
+    pattern: .storybook/index.tsx
+    severity: error
+
+  - id: storybook-metro-config
+    description: |
+      The `metro.config.js` file must be wrapped with `withStorybook` from `@storybook/react-native/metro/withStorybook` and enable `unstable_allowRequireContext`. For Expo, use `expo/metro-config`. For CLI, use `@react-native/metro-config` and `mergeConfig`. Example:
+
+      ```js
+      const { getDefaultConfig } = require('expo/metro-config');
+      const withStorybook = require('@storybook/react-native/metro/withStorybook');
+      const defaultConfig = getDefaultConfig(__dirname);
+      module.exports = withStorybook(defaultConfig, { enabled: true });
+      ```
+      or
+      ```js
+      const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+      const path = require('path');
+      const withStorybook = require('@storybook/react-native/metro/withStorybook');
+      const defaultConfig = getDefaultConfig(__dirname);
+      const config = { transformer: { unstable_allowRequireContext: true } };
+      const finalConfig = mergeConfig(defaultConfig, config);
+      module.exports = withStorybook(finalConfig, { enabled: true, configPath: path.resolve(__dirname, './.storybook') });
+      ```
+    pattern: metro.config.js
+    severity: error
+
+  - id: storybook-babel-reanimated
+    description: |
+      The `babel.config.js` file must include the `react-native-reanimated/plugin` in the plugins array for compatibility with Storybook and React Native Reanimated.
+      Example:
+      ```js
+      plugins: ['react-native-reanimated/plugin'],
+      ```
+    pattern: babel.config.js
+    severity: error
+
+  - id: storybook-dependencies
+    description: |
+      The following devDependencies must be present in `package.json` at version ^8.3.5 or newer:
+        - @storybook/react-native
+        - @storybook/react
+        - @storybook/addon-ondevice-controls
+        - @storybook/addon-ondevice-actions
+        - @storybook/addon-ondevice-backgrounds
+        - @storybook/addon-ondevice-notes
+      Also include:
+        - @react-native-async-storage/async-storage
+      Example:
+      ```json
+      "devDependencies": {
+        "@storybook/react-native": "^8.3.5",
+        "@storybook/react": "^8.3.5",
+        "@storybook/addon-ondevice-controls": "^8.3.5",
+        "@storybook/addon-ondevice-actions": "^8.3.5",
+        "@storybook/addon-ondevice-backgrounds": "^8.3.5",
+        "@storybook/addon-ondevice-notes": "^8.3.5"
+      }
+      ```
+    pattern: package.json
+    severity: error
+
+  - id: storybook-story-pattern
+    description: |
+      All story files must be named with the pattern `*.stories.tsx` or `*.stories.ts` and placed in the same directory as the component or in a `/domains/(domain-name)/stories/` subdirectory. Example:
+      - `Button.stories.tsx`
+      - `/domains/base/stories/Button.stories.tsx`
+    pattern: 'domains/*/stories/*.stories.?(ts|tsx|js|jsx)'
+    severity: error
+
+  - id: storybook-story-meta
+    description: |
+      Each story file must export a `meta` object using `satisfies Meta<typeof Component>` and a default export. Example:
+      ```typescript
+      import type { Meta, StoryObj } from '@storybook/react';
+      import { Button } from 'react-native';
+      const meta = {
+        title: '(Domain)/Components|Pages/CompoenntName',
+        component: Button,
+      } satisfies Meta<typeof Button>;
+      export default meta;
+      ```
+    pattern: '*.stories.@(ts|tsx)'
+    severity: error
+
+  - id: storybook-script-generate
+    description: |
+      The `package.json` scripts section must include a `storybook-generate` script to generate `storybook.requires.ts` automatically:
+      ```json
+      "scripts": {
+        "storybook-generate": "sb-rn-get-stories"
+      }
+      ```
+    pattern: package.json
+    severity: warning
