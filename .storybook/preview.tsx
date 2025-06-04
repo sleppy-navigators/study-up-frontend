@@ -1,3 +1,4 @@
+import '../msw.polyfills';
 import type { Preview } from '@storybook/react';
 import React from 'react';
 import { DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -8,6 +9,9 @@ import { QueryProvider } from '../lib/react-query';
 import StyledSafeAreaView from '../domains/base/providers/safe-area-view';
 import MockingProvider from '../mocks/mocking-provider';
 import ReactotronProvider from '../domains/base/providers/reactotron-provider';
+import { initialize, mswLoader } from 'msw-storybook-addon';
+
+initialize();
 
 const preview: Preview = {
   parameters: {
@@ -37,6 +41,7 @@ const preview: Preview = {
       </ReactotronProvider>
     ),
   ],
+  loaders: [mswLoader],
 };
 
 export default preview;
