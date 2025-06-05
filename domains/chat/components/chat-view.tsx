@@ -1,13 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView, YStack, Paragraph, Spinner } from 'tamagui';
 import { ChatMessageItem, ChatMessageItemProps } from './chat-message-item';
 import { useGroupMessagesQuery } from '@/domains/group/api';
 import { Pageable } from '@/domains/base/api/types';
 import { ChatMessageDto } from '@/domains/group/api/types';
-
-// TODO
-// 1. 맨 처음 페이지 로딩될 때 group/api/index.tsx의 "getGroupMessages" 호출하여 데이터 받아와서 뷰에 보여주기
-// 2. 실시간으로 시스템 메시지 채팅을 받아야하므로, chat/api/index.tsx에서 백엔드로 웹 소켓 연결해서 데이터 받아와서 뷰에 보여주기
+import { connectWebSocket, disconnectWebSocket } from '@/domains/chat/api';
 
 export interface ChatViewMessage extends ChatMessageItemProps {
   id: string;
@@ -21,23 +18,79 @@ export function ChatView({ groupId }: ChatViewProps) {
   const initialPageable: Pageable = {
     page: 0,
     size: 20,
-    sort: ['createdAt,desc'],
   };
 
   const { data: groupMessagesData, isLoading: isLoadingMessages } =
     useGroupMessagesQuery(groupId, initialPageable);
 
-  const messages: ChatViewMessage[] =
-    groupMessagesData?.messages.map((msg: ChatMessageDto) => ({
-      id: msg.id,
-      senderDisplayName:
-        msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
-      content: msg.content,
-      timestamp: msg.createdAt,
-      isBot: msg.senderType === 'BOT',
-    })) || [];
+  const [messages, setMessages] = useState<ChatViewMessage[]>([]);
 
-  if (isLoadingMessages) {
+  useEffect(() => {
+    if (groupMessagesData?.messages) {
+      const mappedMessages = groupMessagesData.messages.map(
+        (msg: ChatMessageDto) => ({
+          id: msg.id,
+          senderDisplayName:
+            msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
+          content: msg.content,
+          timestamp: msg.createdAt,
+          isBot: msg.senderType === 'BOT',
+        })
+      );
+      const sortedMessages = mappedMessages.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+      setMessages(sortedMessages);
+    }
+  }, [groupMessagesData]);
+
+  useEffect(() => {
+    if (groupId && !isLoadingMessages) {
+      const handleNewMessage = (newMessageDto: ChatMessageDto) => {
+        setMessages((prevMessages) => {
+          if (prevMessages.some((msg) => msg.id === newMessageDto.id)) {
+            return prevMessages;
+          }
+          const formattedNewMessage: ChatViewMessage = {
+            id: newMessageDto.id,
+            senderDisplayName:
+              newMessageDto.senderType === 'BOT'
+                ? 'StudyUpBot'
+                : `사용자 ${newMessageDto.senderId}`,
+            content: newMessageDto.content,
+            timestamp: newMessageDto.createdAt,
+            isBot: newMessageDto.senderType === 'BOT',
+          };
+          return [...prevMessages, formattedNewMessage].sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+        });
+      };
+
+      connectWebSocket({
+        groupId,
+        onMessageReceived: handleNewMessage,
+        onConnect: () =>
+          console.log(`ChatView: WebSocket connected for group ${groupId}`),
+        onError: (error, errorMessage) =>
+          console.error(
+            `ChatView: WebSocket error for group ${groupId}:`,
+            errorMessage,
+            error
+          ),
+        onDisconnect: () =>
+          console.log(`ChatView: WebSocket disconnected for group ${groupId}`),
+      });
+
+      return () => {
+        disconnectWebSocket();
+      };
+    }
+  }, [groupId, isLoadingMessages]);
+
+  if (isLoadingMessages && messages.length === 0) {
     return (
       <YStack flex={1} justifyContent="center" alignItems="center">
         <Spinner size="large" color="$yellow9" />
@@ -51,7 +104,7 @@ export function ChatView({ groupId }: ChatViewProps) {
         flex={1}
         padding="$3"
         contentContainerStyle={{ paddingBottom: 20 }}>
-        <YStack space="$3">
+        <YStack space="$3" flexDirection="column-reverse">
           {messages.length === 0 && !isLoadingMessages && (
             <Paragraph textAlign="center" color="$gray10">
               표시할 메시지가 없습니다.
