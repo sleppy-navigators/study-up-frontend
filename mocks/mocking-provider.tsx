@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import Constants from 'expo-constants';
 
 async function enableMocking() {
-  if (!__DEV__) {
+  const { appVariant, storybookEnabled } = Constants.expoConfig?.extra || {};
+  if (appVariant !== 'development' || storybookEnabled) {
     return;
   }
 
-  await import('../msw.polyfills.js');
+  await import('../msw.polyfills');
   const { server } = await import('./server');
-  server.listen();
+  server.listen({
+    onUnhandledRequest: 'bypass',
+  });
 }
 
 export default function MockingProvider({
@@ -19,7 +23,6 @@ export default function MockingProvider({
 
   useEffect(() => {
     enableMocking().then(() => {
-      console.log('Mocking enabled');
       setIsMockingEnabled(true);
     });
   }, []);
