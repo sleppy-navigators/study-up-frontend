@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import Constants from 'expo-constants';
+
+const isStorybookEnabled = Constants.expoConfig?.extra?.storybookEnabled;
 
 async function enableReactotron() {
-  if (!__DEV__) {
+  if (!__DEV__ || isStorybookEnabled) {
     return;
   }
 
-  await import('@/ReactotronConfig');
+  const Reactotron = require('@/ReactotronConfig').default;
+  Reactotron.log('ReactotronConfig loaded');
 }
 
 export default function ReactotronProvider({

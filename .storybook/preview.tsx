@@ -11,6 +11,11 @@ import MockingProvider from '../mocks/mocking-provider';
 import ReactotronProvider from '../domains/base/providers/reactotron-provider';
 import { initialize, mswLoader } from 'msw-storybook-addon';
 
+if (__DEV__) {
+  const Reactotron = require('@/ReactotronConfig').default;
+  Reactotron.log('ReactotronConfig loaded');
+}
+
 initialize();
 
 const preview: Preview = {
