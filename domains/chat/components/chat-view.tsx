@@ -30,7 +30,8 @@ export function ChatView({ groupId }: ChatViewProps) {
   const messages: ChatViewMessage[] =
     groupMessagesData?.messages.map((msg: ChatMessageDto) => ({
       id: msg.id,
-      senderDisplayName: msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
+      senderDisplayName:
+        msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
       content: msg.content,
       timestamp: msg.createdAt,
       isBot: msg.senderType === 'BOT',
@@ -49,8 +50,7 @@ export function ChatView({ groupId }: ChatViewProps) {
       <ScrollView
         flex={1}
         padding="$3"
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
+        contentContainerStyle={{ paddingBottom: 20 }}>
         <YStack space="$3">
           {messages.length === 0 && !isLoadingMessages && (
             <Paragraph textAlign="center" color="$gray10">
@@ -64,4 +64,4 @@ export function ChatView({ groupId }: ChatViewProps) {
       </ScrollView>
     </YStack>
   );
-} 
+}
