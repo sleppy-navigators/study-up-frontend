@@ -18,6 +18,7 @@ export function ChatMessageItem({
   isBot,
   botIcon = <Bot size="$1" color="$blue10" />,
 }: ChatMessageItemProps) {
+  // fixme: use string literals instead of variables
   const alignItems = 'flex-start';
   const backgroundColor = '$blue2';
   const textColor = '$gray12';
@@ -30,8 +31,7 @@ export function ChatMessageItem({
       alignItems={alignItems}
       space="$1"
       alignSelf={alignItems}
-      maxWidth="80%"
-    >
+      maxWidth="80%">
       {isBot && (
         <XStack alignItems="center" space="$2">
           {botIcon}
@@ -45,18 +45,16 @@ export function ChatMessageItem({
         paddingVertical="$2"
         paddingHorizontal="$3"
         borderRadius="$4"
-        marginLeft={isBot ? "$3" : "$0"}
-      >
+        marginLeft={isBot ? '$3' : '$0'}>
         <Paragraph color={textColor}>{content}</Paragraph>
       </YStack>
       <Paragraph
         size="$1"
         color="$gray8"
         textAlign="left"
-        marginLeft={isBot ? "$3" : "$0"}
-      >
+        marginLeft={isBot ? '$3' : '$0'}>
         {format(new Date(timestamp), 'yyyy-MM-dd HH:mm')}
       </Paragraph>
     </YStack>
   );
-} 
+}
