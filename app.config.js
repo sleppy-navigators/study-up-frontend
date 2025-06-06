@@ -118,5 +118,6 @@ export default ({ config }) => ({
       projectId: '7537aea3-7b65-4ae8-b4e8-adf37b4768d1',
     },
     storybookEnabled: process.env.STORYBOOK_ENABLED,
+    appVariant: process.env.APP_VARIANT,
   },
 });

@@ -27,14 +27,20 @@ export function ChatView({ groupId }: ChatViewProps) {
 
   useEffect(() => {
     if (groupMessagesData?.messages) {
-      const mappedMessages = groupMessagesData.messages.map((msg: ChatMessageDto) => ({
-        id: msg.id,
-        senderDisplayName: msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
-        content: msg.content,
-        timestamp: msg.createdAt,
-        isBot: msg.senderType === 'BOT',
-      }));
-      const sortedMessages = mappedMessages.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+      const mappedMessages = groupMessagesData.messages.map(
+        (msg: ChatMessageDto) => ({
+          id: msg.id,
+          senderDisplayName:
+            msg.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${msg.senderId}`,
+          content: msg.content,
+          timestamp: msg.createdAt,
+          isBot: msg.senderType === 'BOT',
+        })
+      );
+      const sortedMessages = mappedMessages.sort(
+        (a, b) =>
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
       setMessages(sortedMessages);
     }
   }, [groupMessagesData]);
@@ -43,26 +49,39 @@ export function ChatView({ groupId }: ChatViewProps) {
     if (groupId && !isLoadingMessages) {
       const handleNewMessage = (newMessageDto: ChatMessageDto) => {
         setMessages((prevMessages) => {
-          if (prevMessages.some(msg => msg.id === newMessageDto.id)) {
+          if (prevMessages.some((msg) => msg.id === newMessageDto.id)) {
             return prevMessages;
           }
           const formattedNewMessage: ChatViewMessage = {
             id: newMessageDto.id,
-            senderDisplayName: newMessageDto.senderType === 'BOT' ? 'StudyUpBot' : `사용자 ${newMessageDto.senderId}`,
+            senderDisplayName:
+              newMessageDto.senderType === 'BOT'
+                ? 'StudyUpBot'
+                : `사용자 ${newMessageDto.senderId}`,
             content: newMessageDto.content,
             timestamp: newMessageDto.createdAt,
             isBot: newMessageDto.senderType === 'BOT',
           };
-          return [...prevMessages, formattedNewMessage].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+          return [...prevMessages, formattedNewMessage].sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
         });
       };
 
       connectWebSocket({
         groupId,
         onMessageReceived: handleNewMessage,
-        onConnect: () => console.log(`ChatView: WebSocket connected for group ${groupId}`),
-        onError: (error, errorMessage) => console.error(`ChatView: WebSocket error for group ${groupId}:`, errorMessage, error),
-        onDisconnect: () => console.log(`ChatView: WebSocket disconnected for group ${groupId}`),
+        onConnect: () =>
+          console.log(`ChatView: WebSocket connected for group ${groupId}`),
+        onError: (error, errorMessage) =>
+          console.error(
+            `ChatView: WebSocket error for group ${groupId}:`,
+            errorMessage,
+            error
+          ),
+        onDisconnect: () =>
+          console.log(`ChatView: WebSocket disconnected for group ${groupId}`),
       });
 
       return () => {
@@ -84,8 +103,7 @@ export function ChatView({ groupId }: ChatViewProps) {
       <ScrollView
         flex={1}
         padding="$3"
-        contentContainerStyle={{ paddingBottom: 20 }}
-      >
+        contentContainerStyle={{ paddingBottom: 20 }}>
         <YStack space="$3" flexDirection="column-reverse">
           {messages.length === 0 && !isLoadingMessages && (
             <Paragraph textAlign="center" color="$gray10">
@@ -99,4 +117,4 @@ export function ChatView({ groupId }: ChatViewProps) {
       </ScrollView>
     </YStack>
   );
-} 
+}
