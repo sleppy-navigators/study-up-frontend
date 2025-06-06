@@ -6,7 +6,6 @@ import { http, HttpResponse, type PathParams } from 'msw';
 import { ChatMessageDto } from '@/domains/group/api/types';
 import { SuccessResponse } from '@/domains/base/api/types';
 import { ChatMessageListResponse } from '@/domains/group/api/types';
-import { server } from '@/mocks/server';
 
 const meta: Meta<typeof ChatView> = {
   title: 'Chat/ChatView',
@@ -115,6 +114,20 @@ type GroupMessagesResolverInfo = {
   params: PathParams;
 };
 
+// Helper to create a STOMP MESSAGE frame
+function createStompMessageFrame(destination: string, body: object) {
+  return [
+    'MESSAGE',
+    `destination:${destination}`,
+    'content-type:application/json',
+    '', // headers/body separator
+    JSON.stringify(body),
+    '\u0000', // STOMP frame terminator
+  ].join('\n');
+}
+
+const WS_URL = 'https://api.study-up.site/ws'; // Should match SockJS endpoint used in connectWebSocket
+
 export const EmptyView: Story = {
   args: {
     groupId: 1,
@@ -174,3 +187,46 @@ export const WithBotMessages: Story = {
     },
   },
 };
+
+// fixme: integrate websocket with msw to show live bot message
+// export const WithLiveBotMessage: Story = {
+//   args: {
+//     groupId: 2,
+//   },
+//   parameters: {
+//     msw: {
+//       handlers: [
+//         ws.link(WS_URL).addEventListener('connection', ({ client }) => {
+//           const message: ChatMessageDto = {
+//             id: '999',
+//             senderId: 0,
+//             senderType: 'BOT',
+//             content: '실시간 봇 메시지입니다!',
+//             createdAt: new Date().toISOString(),
+//           };
+//           client.send(
+//             createStompMessageFrame('/topic/group/2', { data: message })
+//           );
+//         }),
+//         http.get<PathParams, SuccessResponse<ChatMessageListResponse>>(
+//           `${API_PREFIX_URL}/groups/2/messages`,
+//           async ({ request, params }: GroupMessagesResolverInfo) => {
+//             return HttpResponse.json(
+//               {
+//                 message: '성공',
+//                 code: '200',
+//                 data: {
+//                   messages: mockBotMessages,
+//                   currentPage: 0,
+//                   pageCount: 1,
+//                   chatMessageCount: mockBotMessages.length,
+//                 },
+//               },
+//               { status: 200 }
+//             );
+//           }
+//         ),
+//       ],
+//     },
+//   },
+// };
