@@ -7,20 +7,20 @@ interface QueryProviderProps {
   children: ReactNode;
 }
 
-export function QueryProvider({ children }: QueryProviderProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        retry: false,
-        refetchOnReconnect: true,
-      },
-      mutations: {
-        retry: false,
-        throwOnError: true,
-      },
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnReconnect: true,
     },
-  });
+    mutations: {
+      retry: false,
+      throwOnError: true,
+    },
+  },
+});
 
+export function QueryProvider({ children }: QueryProviderProps) {
   const onCopy = async (text: string) => {
     try {
       await Clipboard.setStringAsync(text);
