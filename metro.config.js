@@ -17,9 +17,11 @@ const customConfig = mergeConfig(config, {
 const withStorybookConfig = withStorybook(customConfig, {
   // Set to false to remove storybook specific options
   // you can also use a env variable to set this
-  enabled: process.env.STORYBOOK_ENABLED,
+  enabled: !!process.env.STORYBOOK_ENABLED,
   // Path to your storybook config
   configPath: path.resolve(__dirname, './.storybook'),
+
+  onDisabledRemoveStorybook: !process.env.STORYBOOK_ENABLED,
 
   // Optional websockets configuration
   // Starts a websocket server on the specified port and host on metro start
