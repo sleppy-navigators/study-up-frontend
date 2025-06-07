@@ -34,6 +34,7 @@ export default function CreateChallengePage() {
       title: '',
       deadline: defaultDeadline,
       description: '',
+      deposit: 0,
       tasks: [
         {
           title: '',
@@ -47,6 +48,7 @@ export default function CreateChallengePage() {
   const [errors, setErrors] = useState<{
     title?: string;
     tasks?: string;
+    deposit?: string;
   }>({});
 
   // Add a new task
@@ -120,6 +122,7 @@ export default function CreateChallengePage() {
     const newErrors: {
       title?: string;
       tasks?: string;
+      deposit?: string;
     } = {};
 
     // Validate challenge title
@@ -127,6 +130,11 @@ export default function CreateChallengePage() {
       newErrors.title = '챌린지 제목을 입력해주세요';
     } else if (formData.title.length > 20) {
       newErrors.title = '챌린지 제목은 20자 이내로 입력해주세요';
+    }
+
+    // Validate deposit
+    if (formData.deposit <= 0) {
+      newErrors.deposit = '보증금은 0보다 커야 합니다';
     }
 
     // Validate tasks
@@ -156,6 +164,7 @@ export default function CreateChallengePage() {
         title: formData.title,
         deadline: formData.deadline.toISOString(),
         description: formData.description,
+        deposit: formData.deposit,
         tasks: formData.tasks.map((task) => ({
           title: task.title,
           deadline: task.deadline.toISOString(),
@@ -200,6 +209,31 @@ export default function CreateChallengePage() {
                 {errors.title && (
                   <Text color="$red10" fontSize="$2" ml="$1">
                     {errors.title}
+                  </Text>
+                )}
+              </YStack>
+
+              <YStack space="$2">
+                <Text fontWeight="bold">챌린지 보증금</Text>
+                <Input
+                  size="$4"
+                  placeholder="보증금액"
+                  value={String(formData.deposit)}
+                  onChangeText={(text) =>
+                    setFormData({ ...formData, deposit: Number(text.replace(/[^0-9]/g, '')) })
+                  }
+                  keyboardType="numeric"
+                  borderWidth={errors.deposit ? 1 : 0}
+                  borderColor={errors.deposit ? '$red8' : 'transparent'}
+                  backgroundColor="$gray2"
+                  focusStyle={{
+                    backgroundColor: '$gray1',
+                    borderWidth: 0,
+                  }}
+                />
+                {errors.deposit && (
+                  <Text color="$red10" fontSize="$2" ml="$1">
+                    {errors.deposit}
                   </Text>
                 )}
               </YStack>

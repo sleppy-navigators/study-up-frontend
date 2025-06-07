@@ -24,4 +24,5 @@ export interface CreateChallengeFormData {
     title: string;
     deadline: Date;
   }[];
+  deposit: number;
 }

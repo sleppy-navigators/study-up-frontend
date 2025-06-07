@@ -16,6 +16,7 @@ export interface ChallengeCreationRequest {
   deadline: string;
   description?: string;
   tasks: TaskRequest[];
+  deposit: number;
 }
 
 // 챌린지 응답
