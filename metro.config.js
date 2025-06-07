@@ -15,6 +15,7 @@ const customConfig = mergeConfig(config, {
   resolver: {
     unstable_enablePackageExports: true,
     resolverMainFields: ['react-native', 'node', 'browser', 'main'],
+    unstable_conditionNames: ['react-native', 'require', 'default'],
   },
 });
 
