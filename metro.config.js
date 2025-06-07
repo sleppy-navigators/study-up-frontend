@@ -8,6 +8,10 @@ const withStorybook = require('@storybook/react-native/metro/withStorybook');
 const config = getDefaultConfig(__dirname);
 
 const customConfig = mergeConfig(config, {
+  transformer: {
+    unstable_allowRequireContext: true,
+  },
+
   resolver: {
     unstable_enablePackageExports: true,
     resolverMainFields: ['react-native', 'node', 'browser', 'main'],
