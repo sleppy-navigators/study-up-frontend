@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "eas build --profile development",
     "preview": "eas build --profile preview",
-    "prod": "eas build --profile production",
+    "prod": "storybook-generate && eas build --profile production",
+    "prod:android": "eas build --local --non-interactive --output=./output.aab --platform=android --profile=production",
     "start": "cross-env APP_VARIANT=development expo start --dev-client --clear",
     "reset-project": "node ./scripts/reset-project.js",
     "android": "cross-env APP_VARIANT=development expo run:android",
