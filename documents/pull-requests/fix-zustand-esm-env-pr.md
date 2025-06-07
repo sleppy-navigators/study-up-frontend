@@ -1,19 +1,17 @@
 ## Summary
 
-- Fixed an issue where using `unstable_enablePackageExports` in Metro caused `zustand/middleware` to reference `import.meta.env` in ESM environments, leading to unexpected behavior or errors.
-- The root cause was that `zustand/middleware`'s package exports include an "import" (ESM) condition, which triggers ESM-specific code (`import.meta.env`) in environments that do not support it.
-- To resolve this, `metro.config.js` was updated to set `unstable_conditionNames` so that common modules are prioritized, avoiding the problematic ESM path.
-- This ensures compatibility and prevents accidental ESM code execution in React Native/Metro environments.
+메트로 번들러에서 zustand/middleware 사용 시 ESM 환경에서 발생하는 import.meta.env 관련 이슈를 해결했습니다.
 
 ## PR 유형 및 세부 작업 내용
 
 - [x] 빌드 부분 혹은 패키지 매니저 수정
 - [x] 코드 리팩토링
 
-- Updated `metro.config.js`:
-  - Set `unstable_conditionNames` to prioritize 'react-native', 'require', 'default' over 'import'.
-  - This prevents Metro from resolving to ESM entry points that use `import.meta.env`.
-- Added comments to clarify the reasoning in the config file.
+- 문제 원인:
+  - Metro의 unstable_enablePackageExports 옵션을 사용하면서 zustand/middleware 패키지의 "import"(ESM) 조건이 활성화되어, import.meta.env 코드가 실행되는 문제가 있었습니다.
+- 해결 방법:
+  - metro.config.js의 resolver 설정에서 unstable_conditionNames를 'react-native', 'require', 'default' 순으로 우선 적용하도록 수정했습니다.
+  - 이를 통해 Metro가 ESM 엔트리 포인트 대신 CSM 엔트리 포인트를 우선적으로 사용하게 하여, import.meta.env 코드가 실행되지 않도록 했습니다.
 
 ## test 완료 여부 (선택)
 
@@ -22,8 +20,8 @@
 
 ## 작동 스크린샷 (선택)
 
-N/A (config/build change only)
+해당 없음 (config/build 변경 사항)
 
 ## 리뷰 요구사항 (선택)
 
-- 리뷰 시, Metro config의 resolver 설정이 다른 패키지에 영향이 없는지 확인 부탁드립니다.
+- Metro config의 resolver 설정이 다른 패키지에 영향이 없는지 확인 부탁드립니다.
