@@ -5,6 +5,8 @@ build:
 
     - eas/install_node_modules
 
+    - eas/resolve_build_config
+
     - run:
         name: Generate storybook.requires.ts
         command: bun run storybook-generate
@@ -12,6 +14,8 @@ build:
     - eas/prebuild
 
     - eas/inject_android_credentials
+
+    - eas/configure_android_version
 
     - eas/run_gradle
 
