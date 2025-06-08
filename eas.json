@@ -31,7 +31,9 @@
     "production": {
       "autoIncrement": true,
       "env": {
-        "APP_VARIANT": "production"
+        "APP_VARIANT": "production",
+        "EXPO_PUBLIC_API_URL": "https://api.study-up.site",
+        "EXPO_PUBLIC_FIREBASE_WEB_CLIENT_ID": "425832297557-7serit12s908077334e928rclpdu6uqm.apps.googleusercontent.com"
       },
       "android": {
         "config": "build.yml",
